@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using AnytimeGear.Server.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AnytimeGearServerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AnytimeGearServerContext") ?? throw new InvalidOperationException("Connection string 'AnytimeGearServerContext' not found.")));
@@ -33,3 +34,4 @@ app.MapControllers();
 app.MapFallbackToFile("/index.html");
 
 app.Run();
+//s
