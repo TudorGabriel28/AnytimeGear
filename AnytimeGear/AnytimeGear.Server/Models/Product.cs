@@ -12,6 +12,6 @@
         public short ReplacementValue { get; set; }
         public DateTime CreatedAt { get; set; }
         public required SubCategory SubCategory { get; set; }
-        public List<Rental> Rentals { get; set; }
+        public List<Rental> Rentals { get; set; } = [];
     }
 }
