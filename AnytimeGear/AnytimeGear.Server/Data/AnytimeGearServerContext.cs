@@ -9,11 +9,16 @@ namespace AnytimeGear.Server.Data
 {
     public class AnytimeGearServerContext : DbContext
     {
-        public AnytimeGearServerContext (DbContextOptions<AnytimeGearServerContext> options)
+        public AnytimeGearServerContext(DbContextOptions<AnytimeGearServerContext> options)
             : base(options)
         {
         }
 
-        public DbSet<AnytimeGear.Server.Models.User> User { get; set; } = default!;
+        public DbSet<User> Users { get; set; } = default!;
+        public DbSet<Product> Products { get; set; } = default!;
+        public DbSet<Category> Categories { get; set; } = default!;
+        public DbSet<SubCategory> SubCategories { get; set; } = default!;
+        public DbSet<Rental> Rentals { get; set; } = default!;
+        public DbSet<Address> Addresses { get; set; } = default!;
     }
 }
