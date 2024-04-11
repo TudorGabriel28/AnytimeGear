@@ -1,12 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using AnytimeGear.Server.Data;
+using AnytimeGear.Server.Repositories.Interfaces;
+using AnytimeGear.Server.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AnytimeGearServerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AnytimeGearServerContext") ?? throw new InvalidOperationException("Connection string 'AnytimeGearServerContext' not found.")));
 
 // Add services to the container.
-
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IRentalRepository, RentalRepository>();
+builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
