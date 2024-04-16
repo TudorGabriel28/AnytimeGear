@@ -1,23 +1,22 @@
 ﻿using System.Linq.Expressions;
 
-namespace AnytimeGear.Server.Repositories.Interfaces
+namespace AnytimeGear.Server.Repositories.Interfaces;
+
+public interface IGenericRepository<T> where T : class
 {
-    public interface IGenericRepository<T> where T : class
-    {
-        IList<T> GetAll();
+    Task<ICollection<T>> GetAllAsync();
 
-        T? GetById(int id);
+    Task<ICollection<T>> GetAsync(Expression<Func<T, bool>> expression);
 
-        void Update(T entity);
+    Task<T?> GetByIdAsync(int id);
 
-        void Delete(T entity);
+    Task<T> AddAsync(T entity);
 
-        IList<T> Get(Expression<Func<T, bool>> expression);
+    Task UpdateAsync(T entity);
 
-        void Add(T entity);
+    Task DeleteAsync(T entity);
 
-        void Save();
+    Task DeleteRangeAsync(ICollection<T> entities);
 
-        void DeleteRange(IList<T> entities);
-    }
+    Task<int> SaveAsync();
 }
