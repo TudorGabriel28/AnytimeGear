@@ -2,12 +2,11 @@
 using AnytimeGear.Server.Models;
 using AnytimeGear.Server.Repositories.Interfaces;
 
-namespace AnytimeGear.Server.Repositories
+namespace AnytimeGear.Server.Repositories;
+
+public class RentalRepository : GenericRepository<Rental>, IRentalRepository
 {
-    public class RentalRepository : GenericRepository<Rental>, IRentalRepository
+    public RentalRepository(AnytimeGearServerContext context) : base(context)
     {
-        public RentalRepository(AnytimeGearServerContext context) : base(context)
-        {
-        }
     }
 }

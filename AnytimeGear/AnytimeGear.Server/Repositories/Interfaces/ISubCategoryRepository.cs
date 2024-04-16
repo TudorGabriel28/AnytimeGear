@@ -1,8 +1,7 @@
 ﻿using AnytimeGear.Server.Models;
 
-namespace AnytimeGear.Server.Repositories.Interfaces
+namespace AnytimeGear.Server.Repositories.Interfaces;
+
+public interface ISubCategoryRepository : IGenericRepository<SubCategory>
 {
-    public interface ISubCategoryRepository : IGenericRepository<SubCategory>
-    {
-    }
 }
