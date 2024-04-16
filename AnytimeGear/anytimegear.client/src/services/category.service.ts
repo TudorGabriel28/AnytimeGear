@@ -1,8 +1,8 @@
-import { apiClient } from "../api/apiClient";
+import { apiClient } from "../utils/api-client";
 
 class CategoryService {
   async fetchAll() {
-    return await apiClient.get("/Categories");
+    return await apiClient.get("/categories");
   }
 }
 
