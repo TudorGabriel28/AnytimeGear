@@ -2,12 +2,11 @@
 using AnytimeGear.Server.Models;
 using AnytimeGear.Server.Repositories.Interfaces;
 
-namespace AnytimeGear.Server.Repositories
+namespace AnytimeGear.Server.Repositories;
+
+public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
 {
-    public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
+    public CategoryRepository(AnytimeGearServerContext context) : base(context)
     {
-        public CategoryRepository(AnytimeGearServerContext context) : base(context)
-        {
-        }
     }
 }

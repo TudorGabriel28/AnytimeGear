@@ -1,59 +1,61 @@
 ﻿using AnytimeGear.Server.Data;
 using AnytimeGear.Server.Repositories.Interfaces;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
-namespace AnytimeGear.Server.Repositories
+namespace AnytimeGear.Server.Repositories;
+
+public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    protected readonly AnytimeGearServerContext dbContext;
+    protected readonly DbSet<T> dbSet;
+
+    public GenericRepository(AnytimeGearServerContext context)
     {
-        protected readonly AnytimeGearServerContext dbContext;
+        dbContext = context;
+        dbSet = dbContext.Set<T>();
+    }
 
-        public GenericRepository(AnytimeGearServerContext context)
-        {
-            dbContext = context;
-        }
+    public virtual async Task<ICollection<T>> GetAllAsync()
+    {
+        return await dbSet.AsNoTracking().ToListAsync();
+    }
 
-        public void Add(T entity)
-        {
-            dbContext.Add(entity);
-        }
+    public virtual async Task<ICollection<T>> GetAsync(Expression<Func<T, bool>> expression)
+    {
+        return await dbSet.Where(expression).AsNoTracking().ToListAsync();
+    }
 
-        public void Delete(T entity)
-        {
-            dbContext.Remove(entity);
-        }
+    public virtual async Task<T?> GetByIdAsync(int id)
+    {
+        return await dbSet.FindAsync(id);
+    }
 
-        public virtual IList<T> Get(System.Linq.Expressions.Expression<Func<T, bool>> expression)
-        {
-            return dbContext.Set<T>().Where(expression).ToList();
-        }
+    public async Task<T> AddAsync(T entity)
+    {
+       var result = await dbContext.AddAsync(entity);
+       return result.Entity;
+    }
+    public Task UpdateAsync(T entity)
+    {
+        dbContext.Update(entity);
+        return Task.CompletedTask;
+    }
 
-        public virtual IList<T> GetAll()
-        {
-            return dbContext.Set<T>().ToList();
-        }
+    public Task DeleteAsync(T entity)
+    {
+        dbContext.Remove(entity);
+        return Task.CompletedTask;    
+    }
 
-        public virtual T? GetById(int id)
-        {
-            return dbContext.Set<T>().Find(id);
-        }
+    public Task DeleteRangeAsync(ICollection<T> entities)
+    {
+        dbContext.RemoveRange(entities);
+        return Task.CompletedTask;
+    }
 
-        public void Save()
-        {
-            dbContext.SaveChanges();
-        }
-
-        public void Update(T entity)
-        {
-            dbContext.Update(entity);
-        }
-
-        public void DeleteRange(IList<T> entities)
-        {
-            foreach (var item in entities)
-            {
-                Delete(item);
-            }
-        }
+    public Task<int> SaveAsync()
+    {
+        return dbContext.SaveChangesAsync();
     }
 }

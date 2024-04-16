@@ -1,6 +1,6 @@
-﻿namespace AnytimeGear.Server.Models;
+﻿namespace AnytimeGear.Server.Dtos;
 
-public class Category
+public class CategoryResponseDto
 {
     public int Id { get; set; }
     public required string Name { get; set; }
