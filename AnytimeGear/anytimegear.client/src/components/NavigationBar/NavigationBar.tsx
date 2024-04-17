@@ -12,13 +12,14 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
-import { INavLink } from "./interfaces";
+import { INavLink } from "../../models/navigation-bar.model";
 
 const pages: INavLink[] = [
   { title: "Home", route: "/" },
   { title: "About Us", route: "about" },
   { title: "Contact", route: "contact" },
 ];
+
 const settings = ["Profile", "Account", "Logout"];
 
 function NavigationBar() {
