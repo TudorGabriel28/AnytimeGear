@@ -1,9 +1,9 @@
-import { apiClient } from "../utils/api-client";
+import { apiClient } from '../utils/api-client'
 
 class CategoryService {
-  async fetchAll() {
-    return await apiClient.get("/categories");
-  }
+    async fetchAll() {
+        return await apiClient.get('/categories')
+    }
 }
 
-export const categoryService = new CategoryService();
+export const categoryService = new CategoryService()
