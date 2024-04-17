@@ -1,5 +1,5 @@
 function About() {
-  return <p>About us</p>;
+    return <p>About us</p>
 }
 
-export default About;
+export default About
