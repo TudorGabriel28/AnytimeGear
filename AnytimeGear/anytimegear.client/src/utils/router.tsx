@@ -7,6 +7,8 @@ import About from '../components/About.tsx'
 import ProductDetails, {
     productLoader,
 } from '../components/Product/ProductDetails.tsx'
+import AddCategory from '../components/admin/AddCategory.tsx'
+import { CategoriesPage } from '../components/admin/Categories.tsx'
 
 export const router = createBrowserRouter([
     {
@@ -27,6 +29,14 @@ export const router = createBrowserRouter([
                 path: 'products/:productId',
                 loader: productLoader,
                 element: <ProductDetails />,
+            },
+            {
+                path: "admin/categories/add",
+                element: <AddCategory />
+            },
+            {
+                path: "admin/categories",
+                element: <CategoriesPage />
             },
         ],
     },
