@@ -46,7 +46,7 @@ function NavigationBar() {
     }
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" sx={{ backgroundColor: "white" }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Typography
@@ -57,10 +57,8 @@ function NavigationBar() {
                         sx={{
                             mr: 2,
                             display: { xs: 'none', md: 'flex' },
-                            fontFamily: 'monospace',
                             fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
+                            color: 'black',
                             textDecoration: 'none',
                         }}
                     >
@@ -130,10 +128,8 @@ function NavigationBar() {
                             mr: 2,
                             display: { xs: 'flex', md: 'none' },
                             flexGrow: 1,
-                            fontFamily: 'monospace',
                             fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
+                            color: 'black',
                             textDecoration: 'none',
                         }}
                     >
@@ -153,7 +149,7 @@ function NavigationBar() {
                                 sx={{
                                     my: 2,
                                     mx: 1,
-                                    color: 'white',
+                                    color: 'black',
                                     display: 'block',
                                 }}
                             >

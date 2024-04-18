@@ -2,7 +2,7 @@ import App from '../App.tsx'
 import Error from '../components/Error.tsx'
 import { createBrowserRouter } from 'react-router-dom'
 import Contact from '../components/Contact.tsx'
-import Home from '../components/Home.tsx'
+import Home from '../components/Home/Home.tsx'
 import About from '../components/About.tsx'
 import ProductDetails, {
     productLoader,
