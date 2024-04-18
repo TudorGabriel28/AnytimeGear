@@ -48,8 +48,7 @@ export default defineConfig({
     plugins: [plugin()],
     resolve: {
         alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url)),
-            '@mui/styled-engine': '@mui/styled-engine-sc',
+            '@': fileURLToPath(new URL('./src', import.meta.url)),            
         },
     },
     server: {
