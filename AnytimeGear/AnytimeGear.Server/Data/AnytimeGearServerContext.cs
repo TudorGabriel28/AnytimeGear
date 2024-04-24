@@ -13,7 +13,7 @@ public class AnytimeGearServerContext : DbContext
     public DbSet<User> User { get; set; } = default!;
     public DbSet<Product> Product { get; set; } = default!;
     public DbSet<Category> Category { get; set; } = default!;
-    public DbSet<SubCategory> SubCategory { get; set; } = default!;
+    public DbSet<Subcategory> Subcategory { get; set; } = default!;
     public DbSet<Rental> Rental { get; set; } = default!;
     public DbSet<Address> Address { get; set; } = default!;
 }

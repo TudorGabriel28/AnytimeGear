@@ -46,7 +46,7 @@ function NavigationBar() {
     }
 
     return (
-        <AppBar position="static" sx={{ backgroundColor: "white" }}>
+        <AppBar position="static" sx={{ backgroundColor: 'white' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Typography

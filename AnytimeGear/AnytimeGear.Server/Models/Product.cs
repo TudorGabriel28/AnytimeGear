@@ -11,6 +11,6 @@ public class Product
     public short Quantity { get; set; }
     public short ReplacementValue { get; set; }
     public DateTime CreatedAt { get; set; }
-    public required SubCategory SubCategory { get; set; }
+    public required Subcategory Subcategory { get; set; }
     public List<Rental> Rentals { get; set; } = [];
 }

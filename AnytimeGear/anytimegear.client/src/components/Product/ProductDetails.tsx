@@ -1,4 +1,4 @@
-import { useLoaderData } from 'react-router-dom'
+//import { useLoaderData } from 'react-router-dom'
 
 export async function productLoader({ params }: any) {
     console.log(params.productId)

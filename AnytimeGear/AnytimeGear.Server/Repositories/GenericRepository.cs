@@ -1,6 +1,11 @@
 ﻿using AnytimeGear.Server.Data;
 using AnytimeGear.Server.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Globalization;
 using System.Linq.Expressions;
 
 namespace AnytimeGear.Server.Repositories;
@@ -21,9 +26,43 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await dbSet.AsNoTracking().ToListAsync();
     }
 
-    public virtual async Task<ICollection<T>> GetAsync(Expression<Func<T, bool>> expression)
+    public virtual async Task<ICollection<T>> GetAllAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[]? includes)
     {
-        return await dbSet.Where(expression).AsNoTracking().ToListAsync();
+        var query = dbSet.Where(expression).AsNoTracking();
+        if(includes != null)
+        {
+            foreach (var includeProperty in includes)
+            {
+                query = query.Include(includeProperty);
+            }
+        }
+        return await query.ToListAsync();
+    }
+
+    public virtual async Task<ICollection<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
+    {
+        var query = dbSet.AsNoTracking();
+
+        foreach (var includeProperty in includes)
+        {
+            query = query.Include(includeProperty);
+        }
+
+        return await query.ToListAsync();
+    }
+
+    public virtual async Task<T?> GetAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[]? includes)
+    {
+        var query = dbSet.Where(expression);
+        if(includes != null)
+        {
+            foreach (var includeProperty in includes)
+            {
+                query = query.Include(includeProperty);
+            }
+        }
+        
+        return await query.FirstOrDefaultAsync();
     }
 
     public virtual async Task<T?> GetByIdAsync(int id)
