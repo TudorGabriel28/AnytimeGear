@@ -1,18 +1,21 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { categoryService } from "../../services/category.service";
+import { ICategory } from "../../models/category.model";
 
-export function CategoriesPage () {
+export function CategoriesPage() {
     const [categories, setCategories] = useState<ICategory[]>();
 
-    const getCategories = useCallback(async () => {
-        const categories: ICategory[] = await categoryService.fetchAll();
-        setCategories(categories);
-    }, [])
-
     useEffect(() => {
-        getCategories()
-            .catch(console.error);
-    }, [getCategories])
+        getCategories();
+    }, []);
+    async function getCategories() {
+        await categoryService.fetchAll()
+        .then((response) => {
+            setCategories(response.items);
+        }, (error) => {
+            console.log(error);
+        });
+    }
 
     const contents = categories === undefined
         ? <p><em>Loading...</em></p>
@@ -25,7 +28,8 @@ export function CategoriesPage () {
             </thead>
             <tbody>
                 {categories.map(category =>
-                    <tr key={category.name}>
+                    <tr key={category.id}>
+                        <td>{category.id}</td>
                         <td>{category.name}</td>
                     </tr>
                 )}

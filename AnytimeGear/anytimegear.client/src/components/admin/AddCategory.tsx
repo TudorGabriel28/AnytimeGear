@@ -1,28 +1,21 @@
-import { useCallback, useEffect, useState } from "react";
 import { Box, TextField } from "@mui/material";
 import { categoryService } from "../../services/category.service";
-//import { Form, redirect } from "react-router-dom";
+import { IAddCategoryPayload } from "../../models/category.model";
+import { useState } from "react";
 
-//export async function action({ request }) {
-//    const formData = await request.formData();
-//    const category: ICategory = formData.get("name");
-//    await categoryService.add(category);
-//    return redirect("/categories");
-//}
-
-function AddCategory() {
+export default function AddCategory() {
     
     const [name, setName] = useState<string>("");
 
-    const addCategory = useCallback(async () => {
-        const category: ICategory = { name };
-        await categoryService.add(category);
-    }, [])
-
-    useEffect(() => {
-        addCategory()
-            .catch(console.error);
-    }, [addCategory])
+    const handleSubmit = (event: any) => {
+        setName(event.target.value);
+        console.log("Category name: " + event.target.value);
+    }
+    async function addCategory() {
+        console.log("Adding category: " + name);
+        const payload: IAddCategoryPayload = { name };
+        await categoryService.add(payload);
+    }
     
     return (
         <Box
@@ -33,14 +26,14 @@ function AddCategory() {
             noValidate
             autoComplete="off"
         >
+            <h2>Add Category</h2>
             <TextField
                 id="outlined-controlled"
                 label="Category Name"
-                value={name}
-                name="name"
-                onInput={(event: React.ChangeEvent<HTMLInputElement>) =>
-                    setName(event.target.value)}
+                value={name} 
+                onChange={handleSubmit}
             />
+            <button onClick={addCategory}>Add</button>
             {/*<Form method="post">*/}
             {/*    <button type="submit">New</button>*/}
             {/*</Form>*/}
@@ -48,4 +41,3 @@ function AddCategory() {
     );
 }
 
-export default AddCategory;
