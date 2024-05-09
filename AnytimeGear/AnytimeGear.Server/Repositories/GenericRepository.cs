@@ -21,9 +21,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await dbSet.AsNoTracking().ToListAsync();
     }
 
-    public virtual async Task<ICollection<T>> GetAsync(Expression<Func<T, bool>> expression)
+    public virtual async Task<ICollection<T>> GetAllAsync(Expression<Func<T, bool>> expression)
     {
         return await dbSet.Where(expression).AsNoTracking().ToListAsync();
+    }
+
+    public virtual async Task<T?> GetAsync(Expression<Func<T, bool>> expression)
+    {
+        return await dbSet.Where(expression).FirstOrDefaultAsync();
     }
 
     public virtual async Task<T?> GetByIdAsync(int id)

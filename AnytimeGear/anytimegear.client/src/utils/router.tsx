@@ -7,6 +7,10 @@ import About from '../components/About.tsx'
 import ProductDetails, {
     productLoader,
 } from '../components/Product/ProductDetails.tsx'
+import AddCategory from '../components/admin/AddCategory.tsx'
+import { CategoriesPage } from '../components/admin/Categories.tsx'
+import AddSubCategory from '../components/admin/AddSubCategory.tsx'
+import { SubCategoriesPage } from '../components/admin/SubCategories.tsx'
 
 export const router = createBrowserRouter([
     {
@@ -27,6 +31,22 @@ export const router = createBrowserRouter([
                 path: 'products/:productId',
                 loader: productLoader,
                 element: <ProductDetails />,
+            },
+            {
+                path: "admin/categories/add",
+                element: <AddCategory />
+            },
+            {
+                path: "admin/categories",
+                element: <CategoriesPage />
+            },
+            {
+                path: "admin/subcategories/add",
+                element: <AddSubCategory />
+            },
+            {
+                path: "admin/subcategories",
+                element: <SubCategoriesPage />
             },
         ],
     },

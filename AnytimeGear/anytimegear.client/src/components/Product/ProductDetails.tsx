@@ -1,5 +1,3 @@
-import { useLoaderData } from 'react-router-dom'
-
 export async function productLoader({ params }: any) {
     console.log(params.productId)
     // Fetch product from API
