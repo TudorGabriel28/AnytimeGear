@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios'
 import { apiClient } from '../utils/api-client'
 import { ICategory, IGetCategoriesResponse } from '../models/category.model'
 
-class CategoryService {
+class ProductService {
     async fetchAll(): Promise<ICategory[]> {
         try {
             const response: AxiosResponse = await apiClient.get('/Categories')
@@ -15,4 +15,4 @@ class CategoryService {
     }
 }
 
-export const categoryService = new CategoryService()
+export const categoryService = new ProductService()

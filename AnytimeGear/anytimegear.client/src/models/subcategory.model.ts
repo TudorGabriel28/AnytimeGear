@@ -1,7 +1,7 @@
-import { ICategory } from './category.model';
+import { ICategory } from './category.model'
 
 export interface ISubcategory {
-    id: number;
+    id: number
     name: string
     category: ICategory
 }

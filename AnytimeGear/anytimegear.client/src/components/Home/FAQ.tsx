@@ -22,7 +22,6 @@ export default function FAQ() {
             </Typography>
             <Accordion
                 defaultExpanded
-                
                 variant="outlined"
                 sx={{ borderRadius: 5, mb: 1 }}
             >
@@ -50,11 +49,7 @@ export default function FAQ() {
                     period during checkout.
                 </AccordionDetails>
             </Accordion>
-            <Accordion
-                
-                variant="outlined"
-                sx={{ borderRadius: 5, mb: 1 }}
-            >
+            <Accordion variant="outlined" sx={{ borderRadius: 5, mb: 1 }}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel2-content"
@@ -79,11 +74,7 @@ export default function FAQ() {
                     for damages or late returns.
                 </AccordionDetails>
             </Accordion>
-            <Accordion
-                
-                variant="outlined"
-                sx={{ borderRadius: 5 }}
-            >
+            <Accordion variant="outlined" sx={{ borderRadius: 5 }}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel3-content"

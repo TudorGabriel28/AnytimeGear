@@ -1,3 +1,3 @@
-const ALL_CATEGORIES_NAME = "All Categories";
+const ALL_CATEGORIES_NAME = 'All Categories'
 
-export {ALL_CATEGORIES_NAME};
+export { ALL_CATEGORIES_NAME }

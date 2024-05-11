@@ -1,31 +1,17 @@
-import { Paper, Typography } from '@mui/material'
+import { Box, Paper, Typography } from '@mui/material'
 import landingImage from '../../assets/landing.jpg'
-import Search from './Search'
+import Search from '../Shared/Search/Search'
 import FAQ from './FAQ'
-import { useLoaderData } from 'react-router-dom'
-import { categoryService } from '../../services/category.service'
-import { ICategory } from '../../models/category.model'
-import { subcategoryService } from '../../services/subcategory.service'
-import { ISubcategory } from '../../models/subcategory.model'
+import { useNavigate } from 'react-router-dom'
 
-export async function homeLoader() {
-    const categoryData = await categoryService.fetchAll()
-    const subcategoryData = await subcategoryService.fetchAll()
-
-    return {
-        categories: categoryData.items,
-        subcategories: subcategoryData,
-    }
-}
-
-interface IHomeLoader {
-    categories: ICategory[];
-    subcategories: ISubcategory[];
-}
 
 function Home() {
-    const { categories, subcategories } = useLoaderData() as IHomeLoader
-    
+
+    const navigate = useNavigate();
+    const navigateToSearch = () => {
+        
+        return navigate('/search')
+    }
 
     return (
         <>
@@ -33,17 +19,18 @@ function Home() {
                 variant="subtitle2"
                 gutterBottom
                 sx={{
-                    fontWeight: 600, width: '100%',
+                    fontWeight: 600,
+                    width: '100%',
                     height: '2.5em',
                     backgroundColor: '#eeeeee',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'black'
+                    color: 'black',
                 }}
             >
-                Want more details about our sports & equipment rental
-                services? Call us at 1-800-555-1234
+                Want more details about our sports & equipment rental services?
+                Call us at 1-800-555-1234
             </Typography>
 
             <Paper
@@ -58,7 +45,7 @@ function Home() {
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    margin: '2em 3% 2em 3%'
+                    margin: '2em 3% 2em 3%',
                 }}
             >
                 <Typography
@@ -77,10 +64,11 @@ function Home() {
                 >
                     The best prices for over 1000 products
                 </Typography>
-                <Search
-                    categories={categories}
-                    subcategories={subcategories}
-                />
+                <Box sx={{ mt: 5 }}>
+                    <Search
+                        onSubmit={navigateToSearch}
+                    />
+                </Box>
             </Paper>
 
             <div

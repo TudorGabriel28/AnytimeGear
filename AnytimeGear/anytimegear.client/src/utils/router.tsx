@@ -2,12 +2,13 @@ import App from '../App.tsx'
 import Error from '../components/Error.tsx'
 import { createBrowserRouter } from 'react-router-dom'
 import Contact from '../components/Contact.tsx'
-import Home, { homeLoader } from '../components/Home/Home.tsx'
+import Home from '../components/Home/Home.tsx'
 import About from '../components/About.tsx'
 import ProductDetails, {
     productLoader,
 } from '../components/Product/ProductDetails.tsx'
-import SearchResults, { searchResultsLoader } from '../components/SearchResults/SearchResults.tsx'
+import SearchResults from '../components/SearchResults/SearchResults.tsx'
+import { SearchContextProvider } from '../context/SearchContext.tsx'
 
 export const router = createBrowserRouter([
     {
@@ -15,9 +16,15 @@ export const router = createBrowserRouter([
         element: <App />,
         errorElement: <Error />,
         children: [
-            { index: true, element: <Home />, loader: homeLoader },
             {
-                path: 'search', element: <SearchResults/>, loader: searchResultsLoader
+                element: <SearchContextProvider />,
+                children: [
+                    { index: true, element: <Home />},
+                    {
+                        path: 'search',
+                        element: <SearchResults />,
+                    },
+                ]
             },
             {
                 path: 'about',
