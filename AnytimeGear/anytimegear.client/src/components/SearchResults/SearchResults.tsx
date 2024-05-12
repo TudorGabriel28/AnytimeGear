@@ -1,4 +1,4 @@
-import { useLoaderData, useLocation } from 'react-router-dom'
+import { useLoaderData, useLocation, useNavigate } from 'react-router-dom'
 import { ICategory } from '../../models/category.model'
 import { ISubcategory } from '../../models/subcategory.model'
 import { categoryService } from '../../services/category.service'
@@ -10,80 +10,111 @@ import {
     SelectChangeEvent,
     Typography,
 } from '@mui/material'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import ProductPreview from './ProductPreview'
 import Filters from './Filters'
 import Sort from './Sort'
 import { access } from 'fs/promises'
 import { Dayjs } from 'dayjs'
-
-//export async function searchResultsLoader({ request }: any) {
-//    const categoryData = await categoryService.fetchAll()
-//    const subcategoryData = await subcategoryService.fetchAll()
-
-//    const searchParams = new URL(request.url).searchParams
-
-//    const productsPayload = {
-//        categoryName: searchParams.get('categoryName'),
-//        subcategoryName: searchParams.get('subcategoryName'),
-//        startDate: searchParams.get('startDate'),
-//        endDate: searchParams.get('endDate'),
-//        quantity: searchParams.get('quantity'),
-//    }
-//    console.log(productsPayload)
-//    // fetch products
-
-//    const products = ['Products']
-
-//    return {
-//        products,
-//        categories: categoryData.items,
-//        subcategories: subcategoryData,
-//    }
-//}
-
-
-
-//interface SearchResultsLoader {
-//    products: string[]
-//    categories: ICategory[]
-//    subcategories: ISubcategory[]
-//}
-
+import { productService } from '../../services/product.service'
+import { IProduct, IProductBrand, SortKey, SortOrder } from '../../models/product.model'
+import { SearchContext } from '../../context/SearchContext'
+import { ISortOption, SORT_OPTIONS } from '../../utils/constants'
 
 function SearchResults() {
 
     
 
-    const [products, setProducts] = useState<string[]>([])
+    const [products, setProducts] = useState<IProduct[]>([])
+    const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([])
+    const [productTotalCount, setProductTotalCount] = useState<number>(0)
     const [minPrice, setMinPrice] = useState<number>(0)
     const [maxPrice, setMaxPrice] = useState<number>(100)
-    const [sortOptions, setSortOptions] = useState([]);
-    const [sortValue, setSortValue] = useState('')
+    const [selectedMin, setSelectedMin] = useState<number>(minPrice)
+    const [selectedMax, setSelectedMax] = useState<number>(maxPrice)
+    const [selectedSortOption, setSelectedSortOption] = useState<ISortOption>(SORT_OPTIONS[0])
+    const [checkedBrandNames, setCheckedBrandNames] = useState<string[]>([]);
+    const [brands, setBrands] = useState<IProductBrand[]>([]);
 
-    //const sortOptions = [
-    //    { value: '1', name: 'Default' },
-    //    { value: '2', name: 'Price (lowest first)' },
-    //    { value: '3', name: 'Price (highest first)' },
-    //]
+
+    const { getRentalDurationInDays, quantity, startDate, endDate, subcategory, category } = useContext(SearchContext)
 
     const handleSortChange = (event: SelectChangeEvent) => {
-        setSortValue(event.target.value)
+        setSelectedSortOption(SORT_OPTIONS.find((option) => option.title === event.target.value)!)
     }
 
-    const fetchCategories = useCallback(async () => {
-        const categoryData = await categoryService.fetchAll();
-        setCategories(categoryData);
-        if (category.name === '') {
-            setCategory(categoryData[0]);
+    const handleToggleOnBrand = (brand: IProductBrand) => () => {
+        const currentIndex = checkedBrandNames.findIndex(cbn => cbn == brand.name);
+        console.log(currentIndex)
+        const newChecked = [...checkedBrandNames];
+
+        if (currentIndex == -1) {
+            newChecked.push(brand.name);
+        } else {
+            newChecked.splice(currentIndex, 1);
         }
-    }, [])
+
+        setCheckedBrandNames(newChecked);
+        
+    };
+
+    const handleSearchSubmit = () => {
+        fetchProductsAsync();
+    }
+
+    const handlePriceChange = (event: Event, newValue: number | number[]) => {
+        if (Array.isArray(newValue)) {
+            setSelectedMin(newValue[0]);
+            setSelectedMax(newValue[1]);
+        }
+    }
+
+    const applyPriceFilterOnProducts = () => {
+        let filteredProducts = products.filter(p => p.price >= selectedMin! && p.price <= selectedMax!);
+
+        setFilteredProducts(filteredProducts);
+    }
+
+    const fetchProductsAsync = async () => {
+        const productListResponse = await productService.fetchAll({ categoryId: category.id, subcategoryId: subcategory.id, startDate, endDate, quantity, sortKey: selectedSortOption.key, sortOrder: selectedSortOption.order, checkedBrandNames });
+        setProducts(productListResponse.items);
+        setProductTotalCount(productListResponse.totalCount);
+        setMinPrice(productListResponse.minPrice);
+        setMaxPrice(productListResponse.maxPrice);
+        setSelectedSortOption(SORT_OPTIONS.find(s => s.key == productListResponse.sortKey && s.order == productListResponse.sortOrder)!);
+        setBrands(productListResponse.brands);
+    }
+
+    const fetchProductsCallback = useCallback(fetchProductsAsync, [])
+
+
+    const navigate = useNavigate()
 
     useEffect(() => {
+        if (startDate === undefined || endDate === undefined || quantity === undefined) {
+            navigate('/')
+        } else {
+            fetchProductsCallback()
 
-        fetchCategories()
-            .catch(console.error);;
-    }, [fetchCategories])
+        }
+    }, [fetchProductsCallback])
+
+    useEffect(() => {
+        fetchProductsAsync()
+    }, [selectedSortOption])
+
+    useEffect(() => {
+        applyPriceFilterOnProducts();
+    }, [selectedMin, selectedMax])
+
+    useEffect(() => {
+        fetchProductsAsync();
+        
+    }, [checkedBrandNames])
+
+    useEffect(() => {
+        applyPriceFilterOnProducts();
+    }, [products])
 
 
     return (
@@ -91,7 +122,7 @@ function SearchResults() {
             <Container maxWidth="lg">
                 <Box sx={{ mt: 2 }}>
                     <Search
-                        onSubmit={() => { }}
+                        onSubmit={handleSearchSubmit}
 
                     />
                 </Box>
@@ -100,7 +131,7 @@ function SearchResults() {
                     disableGutters
                     sx={{ display: 'flex', width: '100%', mt: 5 }}
                 >
-                    <Filters min={minPrice} max={maxPrice} />
+                    <Filters min={minPrice} max={maxPrice} selectedMin={selectedMin} selectedMax={selectedMax} brands={brands} checkedBrandNames={checkedBrandNames} handleToggle={handleToggleOnBrand} handlePriceChange={ handlePriceChange} />
                     <Box sx={{ flexGrow: 2, pl: 5 }}>
                         <Box
                             sx={{
@@ -109,16 +140,17 @@ function SearchResults() {
                             }}
                         >
                             <Typography variant="h5" sx={{ fontWeight: 800 }}>
-                                134 products available
+                                {filteredProducts.length} products available
                             </Typography>
-                            <Sort handleChange={handleSortChange} value={sortValue} sortOptions={sortOptions} />
+                            <Sort handleChange={handleSortChange} selectedSortOption={selectedSortOption} />
                         </Box>
 
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', mt: 2 }}>
-                            <ProductPreview />
-                            <ProductPreview />
-                            <ProductPreview />
-                            <ProductPreview />
+                            {
+                                filteredProducts.map((product) => (
+                                    <ProductPreview key={product.id} product={product} getRentalDurationInDays={getRentalDurationInDays} quantity={quantity} />
+                            ))
+                            }
                         </Box>
                     </Box>
                 </Container>

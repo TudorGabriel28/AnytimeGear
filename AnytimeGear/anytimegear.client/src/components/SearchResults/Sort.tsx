@@ -6,22 +6,18 @@ import {
     Typography,
 } from '@mui/material'
 import SwapVertIcon from '@mui/icons-material/SwapVert'
+import { ISortOption, SORT_OPTIONS } from '../../utils/constants';
 
 interface ISortProps {
-    value: string;
-    sortOptions: ISortOption[];
+    selectedSortOption: ISortOption;
     handleChange: (event: SelectChangeEvent) => void;
 }
 
-interface ISortOption {
-    value: string;
-    name: string;
-}
-function Sort({handleChange, value, sortOptions }: ISortProps) {
+function Sort({ handleChange, selectedSortOption }: ISortProps) {
   return (
       <>
           <Select
-              value={value}
+              value={selectedSortOption.title}
               onChange={handleChange}
               sx={{ borderRadius: 10 }}
               size="small"
@@ -37,13 +33,13 @@ function Sort({handleChange, value, sortOptions }: ISortProps) {
                   </InputAdornment>
               }
           >
-              {sortOptions.map((sortOption) => {
+              {SORT_OPTIONS.map((sortOption) => {
                   return (
                       <MenuItem
-                          key={sortOption.value}
-                          value={sortOption.value}
+                          key={sortOption.title}
+                          value={sortOption.title}
                       >
-                          {sortOption.name}
+                          {sortOption.title}
                       </MenuItem>
                   )
               })}

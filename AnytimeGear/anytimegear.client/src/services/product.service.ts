@@ -1,18 +1,20 @@
 import { AxiosResponse } from 'axios'
 import { apiClient } from '../utils/api-client'
-import { ICategory, IGetCategoriesResponse } from '../models/category.model'
+import { IProductList, IProductListPayload } from '../models/product.model'
 
 class ProductService {
-    async fetchAll(): Promise<ICategory[]> {
+    async fetchAll(payload: IProductListPayload ): Promise<IProductList> {
         try {
-            const response: AxiosResponse = await apiClient.get('/Categories')
+            const response: AxiosResponse = await apiClient.post('/Products/', payload)
 
             return response.data
         } catch (err) {
             console.log(err)
-            return []
+            return {
+                items: [], totalCount: 0, minPrice: 0, maxPrice: 0, brands: [], sortKey: 'createdAt', sortOrder: 'asc'
+            }
         }
     }
 }
 
-export const categoryService = new ProductService()
+export const productService = new ProductService()

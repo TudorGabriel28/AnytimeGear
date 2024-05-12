@@ -14,9 +14,10 @@ import SearchIcon from '@mui/icons-material/Search'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { SearchProps } from '../../../models/search.model'
 import CategorySelect from './CategorySelect'
-import { useContext } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { SearchContext } from '../../../context/SearchContext'
 import SubcategorySelect from './SubcategorySelect'
+import dayjs, { Dayjs } from 'dayjs'
 
 
 const StyledDateTimePicker = styled(DateTimePicker)(
@@ -27,11 +28,70 @@ const StyledDateTimePicker = styled(DateTimePicker)(
   `
 )
 
-function Search({ onSubmit }: SearchProps) {
-    
-    
+const SearchButton = styled(Button)(({ theme }) => ({
+    backgroundColor: "#35977d",
+    '&:hover': {
+        backgroundColor: "#2c7e68",
+    },
 
-    const { startDate, endDate, quantity, setStartDate, setEndDate, setQuantity } = useContext(SearchContext);
+}));
+
+function Search({ onSubmit }: {onSubmit: Function}) {
+    
+    const initialErrorState = { value: false, helperText: '' }
+    const today = dayjs();
+    const tomorrow = dayjs().add(1, 'day');
+
+    const { startDate, endDate, quantity, setStartDate, setEndDate, setQuantity, subcategory } = useContext(SearchContext);
+    const [quantityError, setQuantityError] = useState(initialErrorState)
+    const [subcategoryError, setSubcategoryError] = useState(initialErrorState)
+    const [startDateError, setStartDateError] = useState(initialErrorState)
+    const [endDateError, setEndDateError] = useState(initialErrorState)
+
+    const [localStartDate, setLocalStartDate] = useState<Dayjs | undefined>(startDate)
+    const [localEndDate, setLocalEndDate] = useState<Dayjs | undefined>(endDate)
+    const [localQuantity, setLocalQuantity] = useState<number | undefined>(quantity)
+    const isInitialRender = useRef(true);
+
+    const handleSubmit = (event: React.MouseEvent) => {
+        let anyErrors = false;
+
+        // Validate inputs
+        if (localQuantity === undefined || localQuantity <= 0) {
+            setQuantityError({ value: true, helperText: 'Please enter a valid quantity' });
+            anyErrors = true;
+        }
+
+        if (subcategory.name === '') {
+            setSubcategoryError({ value: true, helperText: 'Please select a subcategory' });
+            anyErrors = true;
+        }
+
+        if (localStartDate === undefined) {
+            setStartDateError({ value: true, helperText: 'Please select a start date' });
+            anyErrors = true;
+        }
+
+        if (localEndDate === undefined) {
+            setEndDateError({ value: true, helperText: 'Please select an end date' });
+            anyErrors = true;
+        }
+
+        if (!anyErrors) {
+            setStartDate(localStartDate);
+            setEndDate(localEndDate);
+            setQuantity(localQuantity);
+        }
+    }
+
+    useEffect(() => {
+        if (isInitialRender.current) {
+            isInitialRender.current = false;
+        } else {
+            onSubmit();
+        }
+    }, [quantity])
+
 
     return (
         <>
@@ -65,7 +125,7 @@ function Search({ onSubmit }: SearchProps) {
                         >
                             Subcategory
                         </Typography>
-                        <SubcategorySelect/>
+                        <SubcategorySelect error={subcategoryError} />
                     </div>
                     <div>
                         <Typography
@@ -77,8 +137,15 @@ function Search({ onSubmit }: SearchProps) {
                         <StyledDateTimePicker
                             label="Add date"
                             sx={{ mr: 2 }}
-                            value={startDate}
-                            onChange={(newValue) => setStartDate(newValue)}
+                            value={localStartDate}
+                            onChange={(newValue) => setLocalStartDate(newValue)}
+                            minDate={today}
+                            slotProps={{
+                                textField: {
+                                    helperText: startDateError.helperText,
+                                    error: startDateError.value,
+                                },
+                            }}
                         />
                     </div>
                     <div>
@@ -90,9 +157,16 @@ function Search({ onSubmit }: SearchProps) {
                         </Typography>
                         <StyledDateTimePicker
                             label="Add date"
-                            value={endDate}
-                            onChange={(newValue) => setEndDate(newValue)}
+                            value={localEndDate}
+                            onChange={(newValue) => setLocalEndDate(newValue)}
                             sx={{ mr: 2 }}
+                            minDate={tomorrow}
+                            slotProps={{
+                                textField: {
+                                    helperText: endDateError.helperText,
+                                    error: endDateError.value,
+                                },
+                            }}
                         />
                     </div>
                     <div>
@@ -104,15 +178,17 @@ function Search({ onSubmit }: SearchProps) {
                         </Typography>
                         <TextField
                             id="outlined-number"
-                            label={quantity == undefined ? 'Add quantity' : ' '}
+                            label={localQuantity == undefined ? 'Add quantity' : ' '}
                             InputLabelProps={{ shrink: false }}
-                            value={quantity}
+                            value={localQuantity}
                             type="number"
                             sx={{ mr: 2 }}
                             InputProps={{ sx: { borderRadius: 10 } }}
                             onChange={(e) =>
-                                setQuantity(e.target.value as unknown as number)
+                                setLocalQuantity(e.target.value as unknown as number)
                             }
+                            error={quantityError.value}
+                            helperText={quantityError.helperText}
                         />
                     </div>
                     <div>
@@ -122,19 +198,18 @@ function Search({ onSubmit }: SearchProps) {
                         >
                             Dummy
                         </Typography>
-                        <Button
-                            onClick={onSubmit}
+                        <SearchButton
+                            onClick={handleSubmit}
                             variant="contained"
                             startIcon={<SearchIcon />}
                             size="large"
                             sx={{
                                 borderRadius: 8,
                                 py: 1.7,
-                                bgcolor: '#35977d',
                             }}
                         >
                             Search
-                        </Button>
+                        </SearchButton>
                     </div>
                 </div>
             </Paper>

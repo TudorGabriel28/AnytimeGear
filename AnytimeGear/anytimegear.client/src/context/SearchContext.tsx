@@ -16,12 +16,13 @@ interface ISearchContext {
     setStartDate: Function;
     setEndDate: Function;
     setQuantity: Function;
+    getRentalDurationInDays: Function;
 }
 
 const initialCategory = { id: 0, name: '' };
 const initialSubcategory = { id: 0, name: '', category: initialCategory };
 
-// Create the context with a default value
+// Create the context with a default sortKey
 export const SearchContext = React.createContext<ISearchContext>({
     category: initialCategory,
     subcategory: initialSubcategory,
@@ -33,6 +34,7 @@ export const SearchContext = React.createContext<ISearchContext>({
     setStartDate: () => { },
     setEndDate: () => { },
     setQuantity: () => { },
+    getRentalDurationInDays: () => 0
 });
 
 // Create a provider component
@@ -43,10 +45,10 @@ export const SearchContextProvider: React.FC = ({ children }: any) => {
     const [endDate, setEndDate] = useState<Dayjs | undefined>();
     const [quantity, setQuantity] = useState<number | undefined>();
 
-    
+    const getRentalDurationInDays = () => startDate && endDate ? endDate.diff(startDate, 'days') : 0;
 
     return (
-        <SearchContext.Provider value={{ category, subcategory, startDate, endDate, quantity, setCategory, setSubcategory, setStartDate, setEndDate, setQuantity }}>
+        <SearchContext.Provider value={{ category, subcategory, startDate, endDate, quantity, setCategory, setSubcategory, setStartDate, setEndDate, setQuantity, getRentalDurationInDays }}>
             <Outlet />
         </SearchContext.Provider>
     );

@@ -8,17 +8,19 @@ import Link from '@mui/joy/Link';
 import Typography from '@mui/joy/Typography';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import styled from 'styled-components';
+import { IProduct } from '../../models/product.model';
 
-function ProductPreview() {
+const AddToCartBtn = styled(Button)(({ theme }) => ({
+    backgroundColor: "#35977d",
+    opacity: '0.9',
+    '&:hover': {
+        backgroundColor: "#2c7e68",
+    },
 
-    const AddToCartBtn = styled(Button)(({ theme }) => ({
-        backgroundColor: "#35977d",
-        opacity: '0.9',
-        '&:hover': {
-            backgroundColor: "#2c7e68",
-        },
+}));
 
-    }) );
+function ProductPreview({ product, getRentalDurationInDays, quantity }: { product: IProduct, getRentalDurationInDays: Function, quantity: number }) {
+
 
     return (
         <Card sx={{ width: 200, maxWidth: '100%', m: 2 }}>
@@ -32,8 +34,8 @@ function ProductPreview() {
                   />
               </AspectRatio>
           </CardOverflow>
-          <CardContent>
-              <Typography level="body-xs">Tennis Racket</Typography>
+            <CardContent>
+                <Typography level="body-xs">{product.brand}</Typography>
               <Link
                   href="#product-card"
                   fontWeight="md"
@@ -42,7 +44,7 @@ function ProductPreview() {
                   overlay
                   endDecorator={<ArrowOutwardIcon />}
               >
-                  Super Rockez A400
+                    {`${product.name} ${product.model}`}
               </Link>
 
               <Typography
@@ -50,14 +52,18 @@ function ProductPreview() {
                   sx={{ mt: 1, fontWeight: 'xl' }}
                   endDecorator={
                       <Chip component="span" size="sm" variant="soft" color="success">
-                          13$/day
+                          {product.price}$/day
                       </Chip>
                   }
               >
-                  72 USD
+                    {product.price * getRentalDurationInDays() * quantity} USD
               </Typography>
-              <Typography level="body-sm">
-                  (Only <b>7</b> left in stock!)
+                <Typography level="body-sm">
+                    {
+                        product.stock < 5 &&
+                        <>(Only <b>{product.stock }</b> left in stock!)</>
+                    }
+                  
               </Typography>
           </CardContent>
             <CardOverflow>

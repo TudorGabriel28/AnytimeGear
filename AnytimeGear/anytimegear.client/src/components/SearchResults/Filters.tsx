@@ -2,6 +2,7 @@ import {
     Button,
     Container,
     Divider,
+    ListItemButton,
     Paper,
     Slider,
     SliderThumb,
@@ -10,6 +11,8 @@ import {
     styled,
 } from '@mui/material'
 import { Checkbox, List, ListItem } from '@mui/joy'
+import { IProductBrand } from '../../models/product.model'
+import { MouseEventHandler } from 'react'
 
 const AirbnbSlider = styled(Slider)(({ theme }) => ({
     color: '#3a8589',
@@ -59,9 +62,15 @@ function AirbnbThumbComponent(props: AirbnbThumbComponentProps) {
 interface IFiltersProps {
     min: number;
     max: number;
+    selectedMin: number;
+    selectedMax: number;
+    brands: IProductBrand[];
+    checkedBrandNames: string[];
+    handleToggle: (brand: IProductBrand) => MouseEventHandler;
+    handlePriceChange: (event: Event, newValue: number | number[]) => void;
 }
 
-function Filters({ min, max }: IFiltersProps) {
+function Filters({ min, max, selectedMin, selectedMax, brands, checkedBrandNames, handleToggle, handlePriceChange }: IFiltersProps) {
 
     const marks = [
         {
@@ -132,11 +141,12 @@ function Filters({ min, max }: IFiltersProps) {
                                   ? 'Minimum price'
                                   : 'Maximum price'
                           }
-                          defaultValue={[min, max]}
+                          value={[selectedMin, selectedMax]}
                           valueLabelDisplay="auto"
                           marks={marks}
                           min={min}
                           max={max}
+                          onChange={handlePriceChange}
                       />
                   </Container>
               </Container>
@@ -149,28 +159,19 @@ function Filters({ min, max }: IFiltersProps) {
                       Brands
                   </Typography>
 
-                  <div role="group" aria-labelledby="brands-group">
-                      <List size="sm">
-                          <ListItem>
-                              <Checkbox label="Brand 1" />
-                              <Typography sx={{ ml: 'auto' }}>
-                                  8
-                              </Typography>
-                          </ListItem>
-                          <ListItem>
-                              <Checkbox label="Brand 2" />
-                              <Typography sx={{ ml: 'auto' }}>
-                                  67
-                              </Typography>
-                          </ListItem>
-                          <ListItem>
-                              <Checkbox label="Brand 3" />
-                              <Typography sx={{ ml: 'auto' }}>
-                                  23
-                              </Typography>
-                          </ListItem>
-                      </List>
-                  </div>
+                  
+                    <List size="sm">
+                        {brands.map((brand) => (
+                            <ListItem key={brand.name} onClick={handleToggle(brand)}>
+                                <Checkbox label={brand.name} checked={checkedBrandNames.find(cbn => cbn == brand.name) !== undefined} />
+                            <Typography sx={{ ml: 'auto' }}>
+                                        { brand.count }
+                            </Typography>
+                        </ListItem>
+                        ))}
+                          
+                    </List>
+                 
               </Container>
           </Paper>
 

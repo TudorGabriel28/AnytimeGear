@@ -1,5 +1,6 @@
 import {
     FormControl,
+    FormHelperText,
     InputLabel,
     MenuItem,
     Select,
@@ -10,8 +11,9 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { SearchContext } from '../../../context/SearchContext';
 import { ISubcategory } from '../../../models/subcategory.model';
 import { subcategoryService } from '../../../services/subcategory.service';
+import { ITextFieldError } from '../../../models/error.model';
 
-function SubcategorySelect() {
+function SubcategorySelect({ error }: { error: ITextFieldError }) {
 
     const { category, subcategory, setSubcategory } = useContext(SearchContext);
     const [subcategories, setSubcategories] = useState<ISubcategory[]>([]);
@@ -49,7 +51,9 @@ function SubcategorySelect() {
                 >
                     Select one
                 </InputLabel>
-                <Select
+                <FormControl error={error.value}>
+
+                    <Select
                     id="demo-simple-select"
                     value={subcategory.name}
                     onChange={handleSubcategorySelect}
@@ -73,6 +77,9 @@ function SubcategorySelect() {
                         return null
                     })}
                 </Select>
+
+                    <FormHelperText>{error.helperText}</FormHelperText>
+                </FormControl>
             </FormControl>
         </>
     );

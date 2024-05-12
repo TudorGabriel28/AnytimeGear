@@ -9,7 +9,6 @@ function Home() {
 
     const navigate = useNavigate();
     const navigateToSearch = () => {
-        
         return navigate('/search')
     }
 
