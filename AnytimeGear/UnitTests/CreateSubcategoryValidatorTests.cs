@@ -14,7 +14,6 @@ public class CreateSubcategoryValidatorTests
         var validator = new CreateSubcategoryValidator(new SubcategoryRepositoryMock(false));
         var subcategory = new Subcategory { Name = "Test", 
                                             //Category should exist in the database, not tested here
-                                            CategoryId = 1, 
                                             Category = new Category { Name = "Category" } };
 
         // Act
@@ -33,7 +32,6 @@ public class CreateSubcategoryValidatorTests
         {
             Name = "",
             //Category should exist in the database, not tested here
-            CategoryId = 1,
             Category = new Category { Name = "Category" }
         };
 
@@ -58,7 +56,6 @@ public class CreateSubcategoryValidatorTests
         {
             Name = "Test",
             //Category should exist in the database, not tested here
-            CategoryId = 1,
             Category = new Category { Name = "Category" }
         };
 
@@ -83,7 +80,6 @@ public class CreateSubcategoryValidatorTests
         {
             Name = "A",
             //Category should exist in the database, not tested here
-            CategoryId = 1,
             Category = new Category { Name = "Category" }
         };
 
@@ -108,7 +104,6 @@ public class CreateSubcategoryValidatorTests
         {
             Name = "Abcdefghijklmnopqrstuvwxyz123456789",
             //Category should exist in the database, not tested here
-            CategoryId = 1,
             Category = new Category { Name = "Category" }
         };
 
