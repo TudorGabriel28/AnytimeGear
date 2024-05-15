@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AnytimeGear.Server.Controllers;
 
-public class SubCategoriesController : ApiController
+public class SubcategoriesController : ApiController
 {
-    private readonly ISubCategoryRepository _subcategoryRepository;
+    private readonly ISubcategoryRepository _subcategoryRepository;
     private readonly ICategoryRepository _categoryRepository;
 
-    public SubCategoriesController(ISubCategoryRepository subcategoryRepository, ICategoryRepository categoryRepository)
+    public SubcategoriesController(ISubcategoryRepository subcategoryRepository, ICategoryRepository categoryRepository)
     {
         _subcategoryRepository = subcategoryRepository;
         _categoryRepository = categoryRepository;
@@ -20,44 +20,47 @@ public class SubCategoriesController : ApiController
     [Route("")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<CustomListResponseDto<SubCategoryResponseDto>>> RetrieveSubCategories()
+    public async Task<ActionResult<CustomListResponseDto<SubcategoryResponseDto>>> RetrieveSubcategories()
     {
-        var subcategories = await _subcategoryRepository.GetAllAsync();
+        var subcategories = await _subcategoryRepository.GetAllAsync(sc => sc.Category);
 
-        if(subcategories.Count == 0)
+        if (subcategories.Count == 0)
         {
-            return NotFound("No SubCategories found.");
+            return NotFound("No Subcategories found.");
         }
 
-        var categories = await _categoryRepository.GetAllAsync();
-        IEnumerable<SubCategoryResponseDto> subcategoriesResponseItems = subcategories.Select(e => new SubCategoryResponseDto { Id = e.Id, Name = e.Name, CategoryName = (categories.Where(m => m.Id == e.CategoryId).FirstOrDefault()).Name });
-        var responseDto = new CustomListResponseDto<SubCategoryResponseDto>
+        List<SubcategoryResponseDto> subcategoryResponseDtos = [];
+        foreach (var subcategory in subcategories)
         {
-            Items = subcategoriesResponseItems,
-            Count = subcategories.Count
-        };
-
-        return Ok(responseDto);
+            subcategoryResponseDtos.Add(new SubcategoryResponseDto
+            {
+                Id = subcategory.Id,
+                Name = subcategory.Name,
+                Category = subcategory.Category
+            });
+        }
+        
+        return Ok(subcategoryResponseDtos);
     }
 
     [HttpGet]
     [Route("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<SubCategoryResponseDto>> RetrieveSubCategoryById([FromRoute] int id)
+    public async Task<ActionResult<SubcategoryResponseDto>> RetrieveSubcategoryById([FromRoute] int id)
     {
         var result = await _subcategoryRepository.GetByIdAsync(id);
 
         if (result is null)
         {
-            return NotFound("SubCategory not found.");
+            return NotFound("Subcategory not found.");
         }
         var category = await _categoryRepository.GetByIdAsync(result.CategoryId);
-        var responseDto = new SubCategoryResponseDto
+        var responseDto = new SubcategoryResponseDto
         {
             Id = result.Id,
             Name = result.Name,
-            CategoryName = category.Name
+            Category = category
         };
 
         return Ok(responseDto);
@@ -67,7 +70,7 @@ public class SubCategoriesController : ApiController
     [Route("")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> CreateSubCategory([FromBody] UpsertSubCategoryRequestDto requestDto)
+    public async Task<ActionResult> CreateSubcategory([FromBody] UpsertSubcategoryRequestDto requestDto)
     {
         var category = await _categoryRepository.GetAsync(e => e.Name == requestDto.CategoryName);
 
@@ -77,7 +80,7 @@ public class SubCategoriesController : ApiController
             //Preferably, use FluentValidation to validate the requestDto
         }
 
-        var subcategory = new SubCategory
+        var subcategory = new Subcategory
         {
             Name = requestDto.Name,
             CategoryId = category.Id,
@@ -87,14 +90,14 @@ public class SubCategoriesController : ApiController
         var result = await _subcategoryRepository.AddAsync(subcategory);
         await _subcategoryRepository.SaveAsync();
 
-        var responseDto = new SubCategoryResponseDto
+        var responseDto = new SubcategoryResponseDto
         {
             Id = result.Id,
             Name = result.Name,
-            CategoryName = result.Category.Name
+            Category = result.Category
         };
 
-        return CreatedAtAction(nameof(RetrieveSubCategoryById), new { id = responseDto.Id }, responseDto);
+        return CreatedAtAction(nameof(RetrieveSubcategoryById), new { id = responseDto.Id }, responseDto);
     }
 
     [HttpPut]
@@ -102,7 +105,7 @@ public class SubCategoriesController : ApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> UpdateSubCategory([FromRoute] int id, [FromBody] UpsertSubCategoryRequestDto requestDto)
+    public async Task<ActionResult> UpdateSubcategory([FromRoute] int id, [FromBody] UpsertSubcategoryRequestDto requestDto)
     {
         var category = await _categoryRepository.GetAsync(e => e.Name == requestDto.CategoryName);
 
@@ -116,7 +119,7 @@ public class SubCategoriesController : ApiController
 
         if (subcategory is null)
         {
-            return NotFound("SubCategory not found.");
+            return NotFound("Subcategory not found.");
         }
 
         subcategory.Name = requestDto.Name;
@@ -126,11 +129,11 @@ public class SubCategoriesController : ApiController
         await _subcategoryRepository.UpdateAsync(subcategory);
         await _subcategoryRepository.SaveAsync();
 
-        var responseDto = new SubCategoryResponseDto
+        var responseDto = new SubcategoryResponseDto
         {
             Id = subcategory.Id,
             Name = subcategory.Name,
-            CategoryName = subcategory.Category.Name
+            Category = subcategory.Category
         };
 
         return Ok(responseDto);
@@ -139,7 +142,7 @@ public class SubCategoriesController : ApiController
     [HttpDelete]
     [Route("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<ActionResult> DeleteSubCategory([FromRoute] int id)
+    public async Task<ActionResult> DeleteSubcategory([FromRoute] int id)
     {
         var subcategory = await _subcategoryRepository.GetByIdAsync(id);
 

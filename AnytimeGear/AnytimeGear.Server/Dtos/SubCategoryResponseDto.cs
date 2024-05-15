@@ -1,8 +1,10 @@
-﻿namespace AnytimeGear.Server.Dtos;
+﻿using AnytimeGear.Server.Models;
 
-public class SubCategoryResponseDto
+namespace AnytimeGear.Server.Dtos;
+
+public class SubcategoryResponseDto
 {
     public int Id { get; set; }
     public required string Name { get; set; }
-    public required string CategoryName { get; set; }
+    public required Category Category { get; set; }
 }
