@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AnytimeGear.Server.Migrations
 {
     [DbContext(typeof(AnytimeGearServerContext))]
-    [Migration("20240512152108_RenameQuantityToCapacity")]
-    partial class RenameQuantityToCapacity
+    [Migration("20240515204650_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,11 +84,8 @@ namespace AnytimeGear.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<short>("Capacity")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -104,6 +101,10 @@ namespace AnytimeGear.Server.Migrations
 
                     b.Property<short>("Price")
                         .HasColumnType("smallint");
+
+                    b.Property<string>("ProductPicture")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<short>("ReplacementValue")
                         .HasColumnType("smallint");

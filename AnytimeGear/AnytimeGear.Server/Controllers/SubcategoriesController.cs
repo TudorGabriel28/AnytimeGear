@@ -42,7 +42,7 @@ public class SubcategoriesController : ApiController
                 Category = subcategory.Category
             });
         }
-        
+
         return Ok(subcategoryResponseDtos);
     }
 
@@ -58,7 +58,7 @@ public class SubcategoriesController : ApiController
         {
             return NotFound("Subcategory not found.");
         }
-        var category = await _categoryRepository.GetByIdAsync(result.CategoryId);
+        var category = await _categoryRepository.GetByIdAsync(result.Category.Id);
         var responseDto = new SubcategoryResponseDto
         {
             Id = result.Id,
@@ -84,7 +84,6 @@ public class SubcategoriesController : ApiController
         var subcategory = new Subcategory
         {
             Name = requestDto.Name,
-            CategoryId = category.Id,
             Category = category
         };
 
@@ -131,7 +130,6 @@ public class SubcategoriesController : ApiController
         }
 
         subcategory.Name = requestDto.Name;
-        subcategory.CategoryId = category.Id;
         subcategory.Category = category;
 
         await _subcategoryRepository.UpdateAsync(subcategory);
@@ -154,10 +152,10 @@ public class SubcategoriesController : ApiController
     {
         var subcategory = await _subcategoryRepository.GetByIdAsync(id);
 
-        if(subcategory is not null)
+        if (subcategory is not null)
         {
-           await _subcategoryRepository.DeleteAsync(subcategory);
-           await _subcategoryRepository.SaveAsync();
+            await _subcategoryRepository.DeleteAsync(subcategory);
+            await _subcategoryRepository.SaveAsync();
         }
 
         return NoContent();
