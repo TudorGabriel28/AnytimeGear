@@ -8,9 +8,9 @@ import { Outlet } from 'react-router-dom';
 interface ISearchContext {
     category: ICategory;
     subcategory: ISubcategory;
-    startDate: Dayjs | undefined;
-    endDate: Dayjs | undefined;
-    quantity: number | undefined;
+    startDate: Dayjs | null;
+    endDate: Dayjs | null;
+    quantity: number | null;
     setSubcategory: Function;
     setCategory: Function;
     setStartDate: Function;
@@ -26,8 +26,8 @@ const initialSubcategory = { id: 0, name: '', category: initialCategory };
 export const SearchContext = React.createContext<ISearchContext>({
     category: initialCategory,
     subcategory: initialSubcategory,
-    startDate: undefined,
-    endDate: undefined,
+    startDate: null,
+    endDate: null,
     quantity: undefined,
     setSubcategory: () => { },
     setCategory: () => { },
@@ -41,9 +41,9 @@ export const SearchContext = React.createContext<ISearchContext>({
 export const SearchContextProvider: React.FC = ({ children }: any) => {
     const [subcategory, setSubcategory] = useState<ISubcategory>(initialSubcategory);
     const [category, setCategory] = useState<ICategory>(initialCategory);
-    const [startDate, setStartDate] = useState<Dayjs | undefined>();
-    const [endDate, setEndDate] = useState<Dayjs | undefined>();
-    const [quantity, setQuantity] = useState<number | undefined>();
+    const [startDate, setStartDate] = useState<Dayjs | null>(null);
+    const [endDate, setEndDate] = useState<Dayjs | null>(null);
+    const [quantity, setQuantity] = useState<number | null>(null);
 
     const getRentalDurationInDays = () => startDate && endDate ? endDate.diff(startDate, 'days') : 0;
 

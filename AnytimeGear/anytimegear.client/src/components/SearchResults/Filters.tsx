@@ -68,9 +68,10 @@ interface IFiltersProps {
     checkedBrandNames: string[];
     handleToggle: (brand: IProductBrand) => MouseEventHandler;
     handlePriceChange: (event: Event, newValue: number | number[]) => void;
+    onClear: () => void;
 }
 
-function Filters({ min, max, selectedMin, selectedMax, brands, checkedBrandNames, handleToggle, handlePriceChange }: IFiltersProps) {
+function Filters({ min, max, selectedMin, selectedMax, brands, checkedBrandNames, handleToggle, handlePriceChange, onClear }: IFiltersProps) {
 
     const marks = [
         {
@@ -115,6 +116,7 @@ function Filters({ min, max, selectedMin, selectedMax, brands, checkedBrandNames
                   <Button
                       variant="text"
                       sx={{ textTransform: 'none', borderRadius: 8 }}
+                      onClick={onClear}
                   >
                       Clear all filters
                   </Button>

@@ -35,6 +35,7 @@ function SearchResults() {
     const [selectedSortOption, setSelectedSortOption] = useState<ISortOption>(SORT_OPTIONS[0])
     const [checkedBrandNames, setCheckedBrandNames] = useState<string[]>([]);
     const [brands, setBrands] = useState<IProductBrand[]>([]);
+    const [clearFiltersPressed, setClearFiltersPressed] = useState(false);
 
 
     const { getRentalDurationInDays, quantity, startDate, endDate, subcategory, category } = useContext(SearchContext)
@@ -45,7 +46,6 @@ function SearchResults() {
 
     const handleToggleOnBrand = (brand: IProductBrand) => () => {
         const currentIndex = checkedBrandNames.findIndex(cbn => cbn == brand.name);
-        console.log(currentIndex)
         const newChecked = [...checkedBrandNames];
 
         if (currentIndex == -1) {
@@ -55,7 +55,6 @@ function SearchResults() {
         }
 
         setCheckedBrandNames(newChecked);
-        
     };
 
     const handleSearchSubmit = () => {
@@ -71,18 +70,29 @@ function SearchResults() {
 
     const applyPriceFilterOnProducts = () => {
         let filteredProducts = products.filter(p => p.price >= selectedMin! && p.price <= selectedMax!);
-
         setFilteredProducts(filteredProducts);
+    }
+
+    const clearAllFilters = () => {
+        setClearFiltersPressed(true)
+        setCheckedBrandNames([]);
     }
 
     const fetchProductsAsync = async () => {
         const productListResponse = await productService.fetchAll({ categoryId: category.id, subcategoryId: subcategory.id, startDate, endDate, quantity, sortKey: selectedSortOption.key, sortOrder: selectedSortOption.order, checkedBrandNames });
-        setProducts(productListResponse.items);
-        setProductTotalCount(productListResponse.totalCount);
+        if (selectedMin < productListResponse.minPrice && selectedMax > productListResponse.maxPrice) {
+            setSelectedMin(productListResponse.minPrice);
+            setSelectedMax(productListResponse.maxPrice);
+        }
         setMinPrice(productListResponse.minPrice);
         setMaxPrice(productListResponse.maxPrice);
+
+        
+        setProducts(productListResponse.items);
+        setProductTotalCount(productListResponse.totalCount);
         setSelectedSortOption(SORT_OPTIONS.find(s => s.key == productListResponse.sortKey && s.order == productListResponse.sortOrder)!);
         setBrands(productListResponse.brands);
+
     }
 
     const fetchProductsCallback = useCallback(fetchProductsAsync, [])
@@ -91,7 +101,7 @@ function SearchResults() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (startDate === undefined || endDate === undefined || quantity === undefined) {
+        if (startDate === null || endDate === null || quantity === null) {
             navigate('/')
         } else {
             fetchProductsCallback()
@@ -100,21 +110,18 @@ function SearchResults() {
     }, [fetchProductsCallback])
 
     useEffect(() => {
-        fetchProductsAsync()
-    }, [selectedSortOption])
-
-    useEffect(() => {
+        if (clearFiltersPressed) {
+            setSelectedMin(minPrice)
+            setSelectedMax(maxPrice)
+        }
         applyPriceFilterOnProducts();
-    }, [selectedMin, selectedMax])
+    }, [selectedMin, selectedMax, products])
 
     useEffect(() => {
-        fetchProductsAsync();
         
-    }, [checkedBrandNames])
-
-    useEffect(() => {
-        applyPriceFilterOnProducts();
-    }, [products])
+        fetchProductsAsync()
+        
+    }, [checkedBrandNames, selectedSortOption])
 
 
     return (
@@ -131,7 +138,7 @@ function SearchResults() {
                     disableGutters
                     sx={{ display: 'flex', width: '100%', mt: 5 }}
                 >
-                    <Filters min={minPrice} max={maxPrice} selectedMin={selectedMin} selectedMax={selectedMax} brands={brands} checkedBrandNames={checkedBrandNames} handleToggle={handleToggleOnBrand} handlePriceChange={ handlePriceChange} />
+                    <Filters min={minPrice} max={maxPrice} selectedMin={selectedMin} selectedMax={selectedMax} brands={brands} checkedBrandNames={checkedBrandNames} handleToggle={handleToggleOnBrand} handlePriceChange={handlePriceChange} onClear={clearAllFilters} />
                     <Box sx={{ flexGrow: 2, pl: 5 }}>
                         <Box
                             sx={{
@@ -148,7 +155,7 @@ function SearchResults() {
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', mt: 2 }}>
                             {
                                 filteredProducts.map((product) => (
-                                    <ProductPreview key={product.id} product={product} getRentalDurationInDays={getRentalDurationInDays} quantity={quantity} />
+                                    <ProductPreview key={product.id} product={product} getRentalDurationInDays={getRentalDurationInDays} quantity={quantity!} />
                             ))
                             }
                         </Box>

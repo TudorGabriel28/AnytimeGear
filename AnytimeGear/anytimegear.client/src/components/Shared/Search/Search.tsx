@@ -48,16 +48,16 @@ function Search({ onSubmit }: {onSubmit: Function}) {
     const [startDateError, setStartDateError] = useState(initialErrorState)
     const [endDateError, setEndDateError] = useState(initialErrorState)
 
-    const [localStartDate, setLocalStartDate] = useState<Dayjs | undefined>(startDate)
-    const [localEndDate, setLocalEndDate] = useState<Dayjs | undefined>(endDate)
-    const [localQuantity, setLocalQuantity] = useState<number | undefined>(quantity)
-    const isInitialRender = useRef(true);
+    const [localStartDate, setLocalStartDate] = useState<Dayjs | null>(startDate)
+    const [localEndDate, setLocalEndDate] = useState<Dayjs | null>(endDate)
+    const [localQuantity, setLocalQuantity] = useState<number | null>(quantity)
+    const [submitPressed, setSubmitPressed] = useState(false)
 
     const handleSubmit = (event: React.MouseEvent) => {
         let anyErrors = false;
 
         // Validate inputs
-        if (localQuantity === undefined || localQuantity <= 0) {
+        if (localQuantity === null || localQuantity <= 0) {
             setQuantityError({ value: true, helperText: 'Please enter a valid quantity' });
             anyErrors = true;
         }
@@ -67,12 +67,12 @@ function Search({ onSubmit }: {onSubmit: Function}) {
             anyErrors = true;
         }
 
-        if (localStartDate === undefined) {
+        if (localStartDate === null) {
             setStartDateError({ value: true, helperText: 'Please select a start date' });
             anyErrors = true;
         }
 
-        if (localEndDate === undefined) {
+        if (localEndDate === null) {
             setEndDateError({ value: true, helperText: 'Please select an end date' });
             anyErrors = true;
         }
@@ -81,16 +81,19 @@ function Search({ onSubmit }: {onSubmit: Function}) {
             setStartDate(localStartDate);
             setEndDate(localEndDate);
             setQuantity(localQuantity);
+            setSubmitPressed(true);
         }
     }
 
     useEffect(() => {
-        if (isInitialRender.current) {
-            isInitialRender.current = false;
-        } else {
+        if (submitPressed && startDate === localStartDate && endDate === localEndDate && quantity === localQuantity) {
             onSubmit();
+            setSubmitPressed(false);
         }
-    }, [quantity])
+    }, [startDate, endDate, quantity, submitPressed]);
+
+
+
 
 
     return (
@@ -178,9 +181,9 @@ function Search({ onSubmit }: {onSubmit: Function}) {
                         </Typography>
                         <TextField
                             id="outlined-number"
-                            label={localQuantity == undefined ? 'Add quantity' : ' '}
+                            label={localQuantity == null ? 'Add quantity' : ' '}
                             InputLabelProps={{ shrink: false }}
-                            value={localQuantity}
+                            value={localQuantity == null ? '' : localQuantity}
                             type="number"
                             sx={{ mr: 2 }}
                             InputProps={{ sx: { borderRadius: 10 } }}

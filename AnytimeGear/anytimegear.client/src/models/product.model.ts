@@ -33,9 +33,9 @@ export interface IProductBrand {
 export interface IProductListPayload {
     categoryId: number,
     subcategoryId: number,
-    startDate: Dayjs | undefined,
-    endDate: Dayjs | undefined,
-    quantity: number | undefined,
+    startDate: Dayjs | null,
+    endDate: Dayjs | null,
+    quantity: number | null,
     sortKey: SortKey,
     sortOrder: SortOrder,
     checkedBrandNames: string[]
