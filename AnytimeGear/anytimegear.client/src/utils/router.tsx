@@ -9,6 +9,10 @@ import ProductDetails, {
 } from '../components/Product/ProductDetails.tsx'
 import SearchResults from '../components/SearchResults/SearchResults.tsx'
 import { SearchContextProvider } from '../context/SearchContext.tsx'
+import AddCategory from '../components/admin/AddCategory.tsx'
+import { CategoriesPage } from '../components/admin/Categories.tsx'
+import AddSubcategory from '../components/admin/AddSubcategory.tsx'
+import { SubcategoriesPage } from '../components/admin/Subcategories.tsx'
 
 export const router = createBrowserRouter([
     {
@@ -38,6 +42,22 @@ export const router = createBrowserRouter([
                 path: 'products/:productId',
                 loader: productLoader,
                 element: <ProductDetails />,
+            },
+            {
+                path: "admin/categories/add",
+                element: <AddCategory />
+            },
+            {
+                path: "admin/categories",
+                element: <CategoriesPage />
+            },
+            {
+                path: "admin/subcategories/add",
+                element: <AddSubcategory />
+            },
+            {
+                path: "admin/subcategories",
+                element: <SubcategoriesPage />
             },
         ],
     },

@@ -65,6 +65,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await query.FirstOrDefaultAsync();
     }
 
+    public virtual async Task<T?> GetAsync(Expression<Func<T, bool>> expression)
+    {
+        return await dbSet.Where(expression).FirstOrDefaultAsync();
+    }
+
     public virtual async Task<T?> GetByIdAsync(int id)
     {
         return await dbSet.FindAsync(id);
