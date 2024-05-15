@@ -1,7 +1,11 @@
-﻿using AnytimeGear.Server.Models;
-using AnytimeGear.Server.Dtos;
+﻿using AnytimeGear.Server.Dtos;
+using AnytimeGear.Server.Models;
+using AnytimeGear.Server.Repositories;
 using AnytimeGear.Server.Repositories.Interfaces;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace AnytimeGear.Server.Controllers;
 
@@ -9,60 +13,46 @@ public class ProductsController : ApiController
 {
     private readonly IProductRepository _productRepository;
     private readonly ICategoryRepository _categoryRepository;
-    private readonly ISubCategoryRepository _subCategoryRepository;
+    private readonly ISubcategoryRepository _subCategoryRepository;
+    private readonly IMapper _mapper;
 
-    public ProductsController(IProductRepository productRepository, ICategoryRepository categoryRepository, ISubCategoryRepository subCategoryRepository)
+    public ProductsController(IProductRepository productRepository, IMapper mapper, ICategoryRepository categoryRepository, ISubcategoryRepository subcategoryRepository)
     {
         _productRepository = productRepository;
         _categoryRepository = categoryRepository;
-        _subCategoryRepository = subCategoryRepository;
+        _subCategoryRepository = subcategoryRepository;
+        _mapper = mapper;
     }
 
-    [HttpGet]
-    [Route("")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<CustomListResponseDto<ProductResponseDto>>> RetrieveProducts()
-    {
-        var products = await _productRepository.GetAllAsync();
 
-        var responseDto = new CustomListResponseDto<ProductResponseDto>
-        {
-            Items = products.Select(e => new ProductResponseDto
-            {
-                Name = e.Name,
-                Brand = e.Name,
-                Model = e.Model,
-                Description = e.Model,
-                ProductPicture = e.ProductPicture,
-                Price = e.Price,
-                Quantity = e.Quantity,
-                ReplacementValue = e.ReplacementValue,
-                Category = e.Category,
-                SubCategory = e.SubCategory
-            }),
-            Count = products.Count
-        };
-
-        return Ok(responseDto);
-    }
-
-    [HttpGet]
-    [Route("{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ProductResponseDto>> RetrieveProductById([FromRoute] int id)
-    {
-        var result = await _productRepository.GetByIdAsync(id);
-
-        if (result is null)
-        {
-            return NotFound("Product not found.");
-        }
-        return Ok(result);
-    }
 
     [HttpPost]
     [Route("")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<ProductListResponseDto>> RetrieveProducts(RetrieveProductsRequestDto request)
+    {
+
+        ICollection<ProductResponseDto> products = await _productRepository.GetAllAsync(request);
+        ICollection<ProductBrandDto> productBrands = await _productRepository.GetBrandsAsync(request);
+
+        var response = new ProductListResponseDto
+        {
+            Items = products,
+            TotalCount = products.Count,
+            MinPrice = products.Min(p => p.Price),
+            MaxPrice = products.Max(p => p.Price),
+            Brands = productBrands,
+            SortKey = request.SortKey,
+            SortOrder = request.SortOrder,
+            CheckedBrandNames = request.CheckedBrandNames
+        };
+
+        return Ok(response);
+    }
+
+
+    [HttpPost]
+    [Route("/create")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> CreateProduct([FromBody] UpsertProductRequestDto requestDto)
@@ -72,12 +62,11 @@ public class ProductsController : ApiController
             return BadRequest("Name is required.");
         }
 
-        Category category = await _categoryRepository.GetAsync(e => e.Name == requestDto.Category);
-        if (category == null)
+        Subcategory subcategory = await _subCategoryRepository.GetAsync(e => e.Id == requestDto.SubcategoryId, sc => sc.Category);
+        
+        if (subcategory == null)
         {
-            category = new Category { Name = requestDto.Category };
-            await _categoryRepository.AddAsync(category);
-            await _categoryRepository.SaveAsync();
+            return BadRequest("Subcategory not found.");
         }
 
         var product = new Product
@@ -85,12 +74,11 @@ public class ProductsController : ApiController
             Name = requestDto.Name,
             Brand = requestDto.Brand,
             Model = requestDto.Model,
-            Category = requestDto.Category,
-            SubCategory = requestDto.SubCategory,
+            Subcategory = subcategory,
             Description = requestDto.Description,
             ProductPicture = requestDto.ProductPicture,
             Price = requestDto.Price,
-            Quantity = requestDto.Quantity,
+            Capacity = requestDto.Capacity,
             ReplacementValue = requestDto.ReplacementValue
         };
 
@@ -116,19 +104,25 @@ public class ProductsController : ApiController
         var product = await _productRepository.GetByIdAsync(id);
 
         if (product is null)
-        {
+    {
             return NotFound("Product not found.");
+        }
+
+        var subcategory = await _subCategoryRepository.GetAsync(e => e.Id == requestDto.SubcategoryId, sc => sc.Category);
+
+        if (subcategory is null)
+        {
+            return BadRequest("Subcategory not found.");
         }
 
         product.Name = requestDto.Name;
         product.Brand = requestDto.Brand;
         product.Model = requestDto.Model;
-        product.Category = requestDto.Category;
-        product.SubCategory = requestDto.SubCategory;
+        product.Subcategory = subcategory;
         product.Description = requestDto.Description;
         product.ProductPicture = requestDto.ProductPicture;
         product.Price = requestDto.Price;
-        product.Quantity = requestDto.Quantity;
+        product.Capacity = requestDto.Capacity;
         product.ReplacementValue = requestDto.ReplacementValue;
 
         await _productRepository.UpdateAsync(product);

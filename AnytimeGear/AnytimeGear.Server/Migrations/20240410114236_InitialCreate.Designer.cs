@@ -108,12 +108,12 @@ partial class InitialCreate
                 b.Property<short>("ReplacementValue")
                     .HasColumnType("smallint");
 
-                b.Property<int>("SubCategoryId")
+                b.Property<int>("SubcategoryId")
                     .HasColumnType("int");
 
                 b.HasKey("Id");
 
-                b.HasIndex("SubCategoryId");
+                b.HasIndex("SubcategoryId");
 
                 b.ToTable("Product");
             });
@@ -150,7 +150,7 @@ partial class InitialCreate
                 b.ToTable("Rental");
             });
 
-        modelBuilder.Entity("AnytimeGear.Server.Models.SubCategory", b =>
+        modelBuilder.Entity("AnytimeGear.Server.Models.Subcategory", b =>
             {
                 b.Property<int>("Id")
                     .ValueGeneratedOnAdd()
@@ -169,7 +169,7 @@ partial class InitialCreate
 
                 b.HasIndex("CategoryId");
 
-                b.ToTable("SubCategory");
+                b.ToTable("Subcategory");
             });
 
         modelBuilder.Entity("AnytimeGear.Server.Models.User", b =>
@@ -233,13 +233,13 @@ partial class InitialCreate
 
         modelBuilder.Entity("AnytimeGear.Server.Models.Product", b =>
             {
-                b.HasOne("AnytimeGear.Server.Models.SubCategory", "SubCategory")
+                b.HasOne("AnytimeGear.Server.Models.Subcategory", "Subcategory")
                     .WithMany()
-                    .HasForeignKey("SubCategoryId")
+                    .HasForeignKey("SubcategoryId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.Navigation("SubCategory");
+                b.Navigation("Subcategory");
             });
 
         modelBuilder.Entity("AnytimeGear.Server.Models.Rental", b =>
@@ -261,7 +261,7 @@ partial class InitialCreate
                 b.Navigation("User");
             });
 
-        modelBuilder.Entity("AnytimeGear.Server.Models.SubCategory", b =>
+        modelBuilder.Entity("AnytimeGear.Server.Models.Subcategory", b =>
             {
                 b.HasOne("AnytimeGear.Server.Models.Category", "Category")
                     .WithMany()

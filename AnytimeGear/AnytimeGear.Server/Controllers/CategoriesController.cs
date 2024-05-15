@@ -21,13 +21,9 @@ public class CategoriesController : ApiController
     {
         var categories = await _categoryRepository.GetAllAsync();
 
-        var responseDto = new CustomListResponseDto<CategoryResponseDto>
-        {
-            Items = categories.Select(e => new CategoryResponseDto { Id = e.Id, Name = e.Name}),
-            Count = categories.Count
-        };
+        var response = categories.Select(e => new CategoryResponseDto { Id = e.Id, Name = e.Name });
 
-        return Ok(responseDto);
+        return Ok(response);
     }
 
     [HttpGet]

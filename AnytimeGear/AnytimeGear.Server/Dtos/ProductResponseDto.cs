@@ -4,14 +4,15 @@ namespace AnytimeGear.Server.Dtos;
 
 public class ProductResponseDto
 {
-    public string Name { get; set; }
-    public string Brand { get; set; }
-    public string Model { get; set; }
-    public string Description { get; set; }
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public required string Brand { get; set; }
+    public required string Model { get; set; }
+    public required string Description { get; set; }
     public string ProductPicture { get; set; }
     public short Price { get; set; }
-    public short Quantity { get; set; }
+    public int Capacity { get; set; }
     public short ReplacementValue { get; set; }
-    public string Category { get; set; }
-    public string SubCategory { get; set; }
+    public required Subcategory Subcategory { get; set; }
+    public int Stock { get; set; }
 }

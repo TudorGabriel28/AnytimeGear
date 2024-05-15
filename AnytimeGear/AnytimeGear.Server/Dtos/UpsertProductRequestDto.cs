@@ -10,8 +10,7 @@ public class UpsertProductRequestDto
     public string Description { get; set; }
     public string ProductPicture { get; set; }
     public short Price { get; set; }
-    public short Quantity { get; set; }
+    public short Capacity { get; set; }
     public short ReplacementValue { get; set; }
-    public string Category { get; set; }
-    public string SubCategory { get; set; }
+    public int SubcategoryId { get; set; }
 }

@@ -77,16 +77,15 @@ namespace AnytimeGear.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("AvailabilityStatus")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -107,17 +106,15 @@ namespace AnytimeGear.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<short>("Quantity")
-                        .HasColumnType("smallint");
-
                     b.Property<short>("ReplacementValue")
                         .HasColumnType("smallint");
 
-                    b.Property<string>("SubCategory")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("SubcategoryId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SubcategoryId");
 
                     b.ToTable("Product");
                 });
@@ -154,7 +151,7 @@ namespace AnytimeGear.Server.Migrations
                     b.ToTable("Rental");
                 });
 
-            modelBuilder.Entity("AnytimeGear.Server.Models.SubCategory", b =>
+            modelBuilder.Entity("AnytimeGear.Server.Models.Subcategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -173,7 +170,7 @@ namespace AnytimeGear.Server.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("SubCategory");
+                    b.ToTable("Subcategory");
                 });
 
             modelBuilder.Entity("AnytimeGear.Server.Models.User", b =>
@@ -235,6 +232,17 @@ namespace AnytimeGear.Server.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("AnytimeGear.Server.Models.Product", b =>
+                {
+                    b.HasOne("AnytimeGear.Server.Models.Subcategory", "Subcategory")
+                        .WithMany()
+                        .HasForeignKey("SubcategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Subcategory");
+                });
+
             modelBuilder.Entity("AnytimeGear.Server.Models.Rental", b =>
                 {
                     b.HasOne("AnytimeGear.Server.Models.Product", "Product")
@@ -254,7 +262,7 @@ namespace AnytimeGear.Server.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AnytimeGear.Server.Models.SubCategory", b =>
+            modelBuilder.Entity("AnytimeGear.Server.Models.Subcategory", b =>
                 {
                     b.HasOne("AnytimeGear.Server.Models.Category", "Category")
                         .WithMany()

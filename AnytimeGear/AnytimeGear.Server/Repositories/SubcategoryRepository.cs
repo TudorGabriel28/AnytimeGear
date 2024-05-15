@@ -4,9 +4,10 @@ using AnytimeGear.Server.Repositories.Interfaces;
 
 namespace AnytimeGear.Server.Repositories;
 
-public class SubCategoryRepository : GenericRepository<SubCategory>, ISubCategoryRepository
+public class SubcategoryRepository : GenericRepository<Subcategory>, ISubcategoryRepository
 {
-    public SubCategoryRepository(AnytimeGearServerContext context) : base(context)
+    public SubcategoryRepository(AnytimeGearServerContext context) : base(context)
     {
     }
+
 }
