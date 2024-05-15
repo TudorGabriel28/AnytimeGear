@@ -2,15 +2,17 @@ import App from '../App.tsx'
 import Error from '../components/Error.tsx'
 import { createBrowserRouter } from 'react-router-dom'
 import Contact from '../components/Contact.tsx'
-import Home from '../components/Home.tsx'
+import Home from '../components/Home/Home.tsx'
 import About from '../components/About.tsx'
 import ProductDetails, {
     productLoader,
 } from '../components/Product/ProductDetails.tsx'
+import SearchResults from '../components/SearchResults/SearchResults.tsx'
+import { SearchContextProvider } from '../context/SearchContext.tsx'
 import AddCategory from '../components/admin/AddCategory.tsx'
 import { CategoriesPage } from '../components/admin/Categories.tsx'
-import AddSubCategory from '../components/admin/AddSubCategory.tsx'
-import { SubCategoriesPage } from '../components/admin/SubCategories.tsx'
+import AddSubcategory from '../components/admin/AddSubcategory.tsx'
+import { SubcategoriesPage } from '../components/admin/Subcategories.tsx'
 
 export const router = createBrowserRouter([
     {
@@ -18,7 +20,16 @@ export const router = createBrowserRouter([
         element: <App />,
         errorElement: <Error />,
         children: [
-            { index: true, element: <Home /> },
+            {
+                element: <SearchContextProvider />,
+                children: [
+                    { index: true, element: <Home />},
+                    {
+                        path: 'search',
+                        element: <SearchResults />,
+                    },
+                ]
+            },
             {
                 path: 'about',
                 element: <About />,
@@ -42,11 +53,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: "admin/subcategories/add",
-                element: <AddSubCategory />
+                element: <AddSubcategory />
             },
             {
                 path: "admin/subcategories",
-                element: <SubCategoriesPage />
+                element: <SubcategoriesPage />
             },
         ],
     },

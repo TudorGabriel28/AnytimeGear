@@ -1,26 +1,26 @@
 import { Box, TextField } from "@mui/material";
 import { useState } from "react";
-import { IAddSubCategoryPayload } from "../../models/subcategory.model";
-import { subCategoryService } from "../../services/subcategory.service";
+import { IAddSubcategoryPayload } from "../../models/subcategory.model";
+import { subcategoryService } from "../../services/subcategory.service";
 
-export default function AddSubCategory() {
+export default function AddSubcategory() {
     
     const [name, setName] = useState<string>("");
     const [categoryName, setCategoryName] = useState<string>("");
 
     const handleNameSubmit = (event: any) => {
         setName(event.target.value);
-        console.log("SubCategory name: " + event.target.value);
+        console.log("Subcategory name: " + event.target.value);
     }
 
     const handleCategoryNameSubmit = (event: any) => {
         setCategoryName(event.target.value);
         console.log("Category name: " + event.target.value);
     }
-    async function addSubCategory() {
-        console.log("Adding subCategory: " + name);
-        const payload: IAddSubCategoryPayload = { name, categoryName };
-        await subCategoryService.add(payload);
+    async function addSubcategory() {
+        console.log("Adding subcategory: " + name);
+        const payload: IAddSubcategoryPayload = { name, categoryName };
+        await subcategoryService.add(payload);
     }
     
     return (
@@ -32,10 +32,10 @@ export default function AddSubCategory() {
             noValidate
             autoComplete="off"
         >
-            <h2>Add SubCategory</h2>
+            <h2>Add Subcategory</h2>
             <TextField
                 id="outlined-controlled"
-                label="SubCategory Name"
+                label="Subcategory Name"
                 value={name} 
                 onChange={handleNameSubmit}
             />
@@ -45,7 +45,7 @@ export default function AddSubCategory() {
                 value={categoryName}
                 onChange={handleCategoryNameSubmit}
             />
-            <button onClick={addSubCategory}>Add</button>
+            <button onClick={addSubcategory}>Add</button>
             {/*<Form method="post">*/}
             {/*    <button type="submit">New</button>*/}
             {/*</Form>*/}

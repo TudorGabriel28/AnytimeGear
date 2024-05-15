@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react";
-import { ISubCategory } from "../../models/subcategory.model";
-import { subCategoryService } from "../../services/subcategory.service";
+import { ISubcategory } from "../../models/subcategory.model";
+import { subcategoryService } from "../../services/subcategory.service";
 
-export function SubCategoriesPage() {
-    const [subCategories, setSubCategories] = useState<ISubCategory[]>();
+export function SubcategoriesPage() {
+    const [subcategories, setSubcategories] = useState<ISubcategory[]>();
 
     useEffect(() => {
-        getSubCategories();
+        getSubcategories();
     }, []);
-    async function getSubCategories() {
-        await subCategoryService.fetchAll()
+    async function getSubcategories() {
+        await subcategoryService.fetchAll()
         .then((response) => {
-            setSubCategories(response.items);
+            setSubcategories(response);
         }, (error) => {
             console.log(error);
         });
     }
 
-    const contents = subCategories === undefined
+    const contents = subcategories === undefined
         ? <p><em>Loading...</em></p>
         : <table className="table table-striped" aria-labelledby="tabelLabel">
             <thead>
@@ -28,11 +28,11 @@ export function SubCategoriesPage() {
                 </tr>
             </thead>
             <tbody>
-                {subCategories.map(subcategory =>
+                {subcategories.map(subcategory =>
                     <tr key={subcategory.id}>
                         <td>{subcategory.id}</td>
                         <td>{subcategory.name}</td>
-                        <td>{subcategory.categoryName}</td>
+                        <td>{subcategory.category.name}</td>
                     </tr>
                 )}
             </tbody>
@@ -40,7 +40,7 @@ export function SubCategoriesPage() {
 
     return (
         <div>
-            <h1 id="tabelLabel">SubCategories</h1>
+            <h1 id="tabelLabel">Subcategories</h1>
             {contents}
         </div>
     );

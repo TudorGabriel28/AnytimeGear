@@ -8,9 +8,9 @@ public class Product
     public required string Model { get; set; }
     public required string Description { get; set; }
     public short Price { get; set; }
-    public short Quantity { get; set; }
+    public int Capacity { get; set; }
     public short ReplacementValue { get; set; }
     public DateTime CreatedAt { get; set; }
-    public required SubCategory SubCategory { get; set; }
+    public required Subcategory Subcategory { get; set; }
     public List<Rental> Rentals { get; set; } = [];
 }
