@@ -11,7 +11,7 @@ export function CategoriesPage() {
     async function getCategories() {
         await categoryService.fetchAll()
         .then((response) => {
-            setCategories(response.items);
+            setCategories(response);
         }, (error) => {
             console.log(error);
         });
