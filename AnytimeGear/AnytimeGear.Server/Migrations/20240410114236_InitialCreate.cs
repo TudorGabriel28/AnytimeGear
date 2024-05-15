@@ -47,7 +47,7 @@ public partial class InitialCreate : Migration
             });
 
         migrationBuilder.CreateTable(
-            name: "SubCategory",
+            name: "Subcategory",
             columns: table => new
             {
                 Id = table.Column<int>(type: "int", nullable: false)
@@ -57,9 +57,9 @@ public partial class InitialCreate : Migration
             },
             constraints: table =>
             {
-                table.PrimaryKey("PK_SubCategory", x => x.Id);
+                table.PrimaryKey("PK_Subcategory", x => x.Id);
                 table.ForeignKey(
-                    name: "FK_SubCategory_Category_CategoryId",
+                    name: "FK_Subcategory_Category_CategoryId",
                     column: x => x.CategoryId,
                     principalTable: "Category",
                     principalColumn: "Id",
@@ -102,15 +102,15 @@ public partial class InitialCreate : Migration
                 Quantity = table.Column<short>(type: "smallint", nullable: false),
                 ReplacementValue = table.Column<short>(type: "smallint", nullable: false),
                 CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                SubCategoryId = table.Column<int>(type: "int", nullable: false)
+                SubcategoryId = table.Column<int>(type: "int", nullable: false)
             },
             constraints: table =>
             {
                 table.PrimaryKey("PK_Product", x => x.Id);
                 table.ForeignKey(
-                    name: "FK_Product_SubCategory_SubCategoryId",
-                    column: x => x.SubCategoryId,
-                    principalTable: "SubCategory",
+                    name: "FK_Product_Subcategory_SubcategoryId",
+                    column: x => x.SubcategoryId,
+                    principalTable: "Subcategory",
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Cascade);
             });
@@ -150,9 +150,9 @@ public partial class InitialCreate : Migration
             column: "UserId");
 
         migrationBuilder.CreateIndex(
-            name: "IX_Product_SubCategoryId",
+            name: "IX_Product_SubcategoryId",
             table: "Product",
-            column: "SubCategoryId");
+            column: "SubcategoryId");
 
         migrationBuilder.CreateIndex(
             name: "IX_Rental_ProductId",
@@ -165,8 +165,8 @@ public partial class InitialCreate : Migration
             column: "UserId");
 
         migrationBuilder.CreateIndex(
-            name: "IX_SubCategory_CategoryId",
-            table: "SubCategory",
+            name: "IX_Subcategory_CategoryId",
+            table: "Subcategory",
             column: "CategoryId");
     }
 
@@ -186,7 +186,7 @@ public partial class InitialCreate : Migration
             name: "User");
 
         migrationBuilder.DropTable(
-            name: "SubCategory");
+            name: "Subcategory");
 
         migrationBuilder.DropTable(
             name: "Category");

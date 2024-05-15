@@ -1,19 +1,23 @@
-import { IAddSubCategoryPayload, IGetSubCategoriesResponse } from '../models/subcategory.model'
+import { IAddSubcategoryPayload, IGetSubcategoriesResponse } from '../models/subcategory.model'
 import { apiGetClient, apiPostClient } from '../utils/api-client'
 import { AxiosResponse } from 'axios'
+import { apiClient } from '../utils/api-client'
+import { ISubcategory } from '../models/subcategory.model'
 
-class SubCategoryService {
-    async fetchAll(): Promise<IGetSubCategoriesResponse> {
+class SubcategoryService {
+    async fetchAll(): Promise<ISubcategory[]> {
         try {
-            const response: AxiosResponse = await apiGetClient.get('/subcategories')
+            const response: AxiosResponse =
+                await apiClient.get('/Subcategories')
+
             return response.data
         } catch (err) {
             console.log(err)
-            return { items: [], count: 0 }
+            return []
         }
     }
 
-    async add(payload: IAddSubCategoryPayload) {
+    async add(payload: IAddSubcategoryPayload) {
         try {
             await apiPostClient.post("/subcategories", payload).then((response) => {
                 console.log("Subcategory added successfully: " + response.status);
@@ -26,4 +30,4 @@ class SubCategoryService {
     }
 }
 
-export const subCategoryService = new SubCategoryService()
+export const subcategoryService = new SubcategoryService()

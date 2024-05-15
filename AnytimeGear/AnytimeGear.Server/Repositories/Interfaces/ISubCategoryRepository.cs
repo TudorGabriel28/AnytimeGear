@@ -2,6 +2,6 @@
 
 namespace AnytimeGear.Server.Repositories.Interfaces;
 
-public interface ISubCategoryRepository : IGenericRepository<SubCategory>
+public interface ISubcategoryRepository : IGenericRepository<Subcategory>
 {
 }

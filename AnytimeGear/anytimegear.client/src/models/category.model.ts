@@ -1,4 +1,4 @@
-import { IGetAll } from "./base.model";
+import { IGetAll } from './generic.model'
 
 export interface ICategory {
     id: number;
