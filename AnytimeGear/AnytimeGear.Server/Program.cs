@@ -2,6 +2,8 @@
 using AnytimeGear.Server.Data;
 using AnytimeGear.Server.Repositories.Interfaces;
 using AnytimeGear.Server.Repositories;
+using AnytimeGear.Server.Infrastructure;
+using AutoMapper;
 using AnytimeGear.Server.Misc;
 
 var CORSCustomAllowedOrigins = "_myAllowSpecificOrigins";
@@ -29,6 +31,12 @@ builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddControllers();
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -22,7 +22,6 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
         int quantity = retrieveProductsRequestDto.Quantity;
         int subcategoryId = retrieveProductsRequestDto.SubcategoryId;
 
-
         IQueryable<Product> query = dbSet.Include(p => p.Subcategory.Category)
             .Include(p => p.Rentals)
             .Where(p => p.Subcategory.Id == subcategoryId)
@@ -32,14 +31,14 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
         switch (sortKey)
         {
             case "price":
-                if(sortOrder == "asc")
+                if (sortOrder == "asc")
                     query = query.OrderBy(x => x.Price);
                 else
                     query = query.OrderByDescending(x => x.Price);
                 break;
-            case "createdAt":
-                query = query.OrderBy(x => x.CreatedAt);
-                break;
+            //case "createdAt":
+            //    query = query.OrderBy(x => x.CreatedAt);
+            //    break;
             default:
                 break;
         }
@@ -70,7 +69,6 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
         DateTime endDate = DateTime.Parse(retrieveProductsRequestDto.EndDate);
         int quantity = retrieveProductsRequestDto.Quantity;
         int subcategoryId = retrieveProductsRequestDto.SubcategoryId;
-
 
         return await dbSet.Include(p => p.Subcategory.Category)
             .Include(p => p.Rentals)

@@ -7,6 +7,7 @@ export interface IProduct {
     brand: string
     model: string
     description: string
+    productpicture: string
     price: number
     quantity: number
     replacementValue: number
@@ -30,6 +31,9 @@ export interface IProductBrand {
     count: number
 }
 
+export interface IGetProductResponse extends IGetAll<IProduct[]> { }
+export interface IGetAll<T> { }
+
 export interface IProductListPayload {
     categoryId: number,
     subcategoryId: number,
@@ -43,3 +47,4 @@ export interface IProductListPayload {
 
 export type SortKey = 'createdAt' | 'price'
 export type SortOrder = 'asc' | 'desc'
+
