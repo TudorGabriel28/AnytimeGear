@@ -1,8 +1,9 @@
-﻿namespace AnytimeGear.Server.Models;
+﻿using AnytimeGear.Server.Models;
 
-public class Product
+namespace AnytimeGear.Server.Dtos;
+
+public class UpsertProductRequestDto
 {
-    public int Id { get; set; }
     public string Name { get; set; }
     public string Brand { get; set; }
     public string Model { get; set; }
@@ -13,6 +14,4 @@ public class Product
     public short ReplacementValue { get; set; }
     public string Category { get; set; }
     public string SubCategory { get; set; }
-    public List<Rental> Rentals { get; set; } = [];
-    public bool AvailabilityStatus { get; set; }
 }
