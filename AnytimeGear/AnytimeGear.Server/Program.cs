@@ -3,6 +3,7 @@ using AnytimeGear.Server.Data;
 using AnytimeGear.Server.Repositories.Interfaces;
 using AnytimeGear.Server.Repositories;
 using AnytimeGear.Server.Misc;
+using AnytimeGear.Server.Validators;
 
 var CORSCustomAllowedOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IRentalRepository, RentalRepository>();
 builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICreateCategoryValidator, CreateCategoryValidator>();
+builder.Services.AddScoped<ICreateSubcategoryValidator, CreateSubcategoryValidator>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
