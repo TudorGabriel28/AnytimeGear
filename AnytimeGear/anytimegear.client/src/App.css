@@ -15,3 +15,75 @@ th, td {
     padding-left: 1rem;
     padding-right: 1rem;
 }
+
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.about-us-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.about-section h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.card {
+    border-radius: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin: 10px;
+}
+
+.card-title {
+    color: black;
+}
+
+.card-text {
+    color: black;
+}
+
+.history-section,
+.mission-section,
+.vision-section,
+.values-section,
+.contact-section {
+    margin-top: 40px;
+}
+
+.history-section h2,
+.mission-section h2,
+.vision-section h2,
+.values-section h2,
+.contact-section h1 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.contact-section h2 {
+    margin-top: 20px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.title {
+    text-align: center;
+    margin-top: 20px!important;
+    margin-bottom: 20px;
+}
+
+#contact-section {
+    align-content: center;
+}
