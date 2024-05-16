@@ -1,11 +1,13 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import { productService } from "../../services/product.service";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { IProduct } from "../../models/product.model";
 import { AspectRatio, Sheet, Skeleton } from "@mui/joy";
 import { Box, Button,  Typography, styled } from "@mui/material";
 import Chip from '@mui/joy/Chip';
+import { rentalService } from "../../services/rental.service";
+import SuccessAlert from "./SuccessAlert";
 
 const RentButton = styled(Button)(({ theme }) => ({
     backgroundColor: "#35977d",
@@ -22,6 +24,7 @@ function ProductDetails() {
     const [product, setProduct] = useState<IProduct>()
     const [loading, setLoading] = useState(true);
     const [totalPrice, setTotalPrice] = useState(0)
+    const [openAlert, setOpenAlert] = useState(false);
     
     const fetchProductAsync = async () => {
         setLoading(true)
@@ -39,6 +42,23 @@ function ProductDetails() {
     useEffect(() => {
         fetchProductCallback()
     }, [fetchProductCallback])
+
+
+    const addRentalAsync = async () => {
+        if (product == undefined || startDate == undefined || endDate == undefined || quantity === null) return
+
+        const productId = parseInt(id!)
+        
+        await rentalService.create({ productId, userId:1, startDate, endDate, quantity })
+
+        setOpenAlert(true)
+
+        setTimeout(() => {
+            setOpenAlert(false)
+            
+        }, 5000)
+    }
+
 
     return (
         <>
@@ -106,9 +126,8 @@ function ProductDetails() {
                             <Box>
 
                                 <RentButton
-
+                                    onClick={async () => await addRentalAsync()}
                                     variant="contained"
-
                                     size="large"
                                     sx={{
                                         borderRadius: 8,
@@ -126,6 +145,10 @@ function ProductDetails() {
                     </Box>
 
                 </Box>
+                <Box sx={{ position: 'absolute', right: 50, bottom: 50 }}>
+                    <SuccessAlert open={openAlert} setOpen={setOpenAlert} />
+                </Box>
+                
             </Sheet>
             
         </>
