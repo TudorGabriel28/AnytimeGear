@@ -7,7 +7,7 @@ export interface IProduct {
     brand: string
     model: string
     description: string
-    productpicture: string
+    productPicture: string
     price: number
     quantity: number
     replacementValue: number
@@ -31,7 +31,6 @@ export interface IProductBrand {
     count: number
 }
 
-export interface IGetProductResponse extends IGetAll<IProduct[]> { }
 export interface IGetAll<T> { }
 
 export interface IProductListPayload {

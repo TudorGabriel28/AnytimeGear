@@ -1,9 +1,7 @@
-import { AxiosResponse } from 'axios'
-import { apiClient } from '../utils/api-client'
-import { IProductList, IProductListPayload } from '../models/product.model'
+import { IProduct, IProductList, IProductListPayload } from '../models/product.model'
 import { AxiosResponse } from "axios";
 import { apiClient } from "../utils/api-client";
-import { IGetProductResponse } from "../models/product.model";
+import { Dayjs } from 'dayjs';
 
 class ProductService {
     async fetchAll(payload: IProductListPayload ): Promise<IProductList> {
@@ -14,19 +12,19 @@ class ProductService {
         } catch (err) {
             console.log(err)
             return {
-                items: [], totalCount: 0, minPrice: 0, maxPrice: 0, brands: [], sortKey: 'createdAt', sortOrder: 'asc'
+                items: [], totalCount: 0, minPrice: 0, maxPrice: 0, brands: [], sortKey: 'createdAt', sortOrder: 'asc', checkedBrandNames: []
             }
         }
     }
 
-    async fetch(id: number): Promise<IGetProductResponse> {
+    async fetchProduct(id: number, startDate: Dayjs, endDate: Dayjs): Promise<IProduct> {
         try {
-            const response: AxiosResponse = await apiClient.get(`/Products/${id}`)
+            const response: AxiosResponse = await apiClient.get(`/Products/${id}?startDate=${startDate}&endDate=${endDate}`)
 
             return response.data
         } catch (err) {
             console.log(err)
-            return { items: [], count: 0 }
+            throw new Error('Failed to fetch product');
         }
     }
 }

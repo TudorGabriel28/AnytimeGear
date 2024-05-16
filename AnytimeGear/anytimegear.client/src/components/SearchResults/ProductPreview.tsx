@@ -36,16 +36,16 @@ function ProductPreview({ product, getRentalDurationInDays, quantity }: { produc
           </CardOverflow>
             <CardContent>
                 <Typography level="body-xs">{product.brand}</Typography>
-              <Link
-                  href="#product-card"
+                <Link
+                  href={`/products/${product.id}`}
                   fontWeight="md"
                   color="neutral"
                   textColor="text.primary"
                   overlay
                   endDecorator={<ArrowOutwardIcon />}
-              >
+               >
                     {`${product.name} ${product.model}`}
-              </Link>
+                </Link>
 
               <Typography
                   level="title-lg"
