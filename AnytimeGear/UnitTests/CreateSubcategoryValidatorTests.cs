@@ -41,7 +41,6 @@ public class CreateSubcategoryValidatorTests
         // Assert
         Assert.IsFalse(result.IsValid);
         Assert.AreEqual(result.Errors["Name"].Count, 2);
-
         Assert.AreEqual(result.Errors["Name"][0], "Name is required");
         Assert.AreEqual(result.Errors["Name"][1], "Name must be at least 2 characters");
     }
@@ -49,7 +48,6 @@ public class CreateSubcategoryValidatorTests
     [TestMethod]
     public async Task Given_DuplicatedSubcategory_When_ValidateAsync_Returns_IsNotValid()
     {
-
         // Arrange
         var validator = new CreateSubcategoryValidator(new SubcategoryRepositoryMock(true));
         var subcategory = new Subcategory
@@ -59,21 +57,18 @@ public class CreateSubcategoryValidatorTests
             Category = new Category { Name = "Category" }
         };
 
-
         // Act
         var result = await validator.ValidateAsync(subcategory);
 
         // Assert
         Assert.IsFalse(result.IsValid);
         Assert.AreEqual(result.Errors["Name"].Count, 1);
-
         Assert.AreEqual(result.Errors["Name"][0], "Subcategory already exists");
     }
 
     [TestMethod]
     public async Task Given_SubcategoryNameShorterThanMin_When_ValidateAsync_Returns_IsNotValid()
     {
-
         // Arrange
         var validator = new CreateSubcategoryValidator(new SubcategoryRepositoryMock(false));
         var subcategory = new Subcategory
@@ -83,21 +78,18 @@ public class CreateSubcategoryValidatorTests
             Category = new Category { Name = "Category" }
         };
 
-
         // Act
         var result = await validator.ValidateAsync(subcategory);
 
         // Assert
         Assert.IsFalse(result.IsValid);
         Assert.AreEqual(result.Errors["Name"].Count, 1);
-        
         Assert.AreEqual(result.Errors["Name"][0], "Name must be at least 2 characters");
     }
 
     [TestMethod]
     public async Task Given_SubcategoryNameLongerThanMax_When_ValidateAsync_Returns_IsNotValid()
     {
-
         // Arrange
         var validator = new CreateSubcategoryValidator(new SubcategoryRepositoryMock(false));
         var subcategory = new Subcategory
@@ -113,7 +105,6 @@ public class CreateSubcategoryValidatorTests
         // Assert
         Assert.IsFalse(result.IsValid);
         Assert.AreEqual(result.Errors["Name"].Count, 1);
-
         Assert.AreEqual(result.Errors["Name"][0], "Name must be less than or equal to 32 characters");
     }
 }
