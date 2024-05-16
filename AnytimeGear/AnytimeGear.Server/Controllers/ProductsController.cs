@@ -9,7 +9,8 @@ using System.Linq.Expressions;
 
 namespace AnytimeGear.Server.Controllers;
 
-public class ProductsController : ApiController
+[ApiController]
+public class ProductsController : Controller
 {
     private readonly IProductRepository _productRepository;
     private readonly ICategoryRepository _categoryRepository;
@@ -24,10 +25,21 @@ public class ProductsController : ApiController
         _mapper = mapper;
     }
 
+    [HttpGet]
+    [Route("/api/products/admin")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<ProductResponseDto>> RetrieveProducts()
+    {
 
+        var products = await _productRepository.GetAllAsync(p => p.Subcategory, p => p.Subcategory.Category);
+
+        var response = products.Select(e => new ProductResponseDto { Id = e.Id, Name = e.Name, Brand = e.Brand, Capacity = e.Capacity, Description = e.Description, Model = e.Model, Price = e.Price, ProductPicture = e.ProductPicture, ReplacementValue = e.ReplacementValue, Stock = 0, Subcategory = e.Subcategory});
+
+        return Ok(response);
+    }
 
     [HttpPost]
-    [Route("")]
+    [Route("/api/products")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<ProductListResponseDto>> RetrieveProducts(RetrieveProductsRequestDto request)
     {
@@ -50,9 +62,28 @@ public class ProductsController : ApiController
         return Ok(response);
     }
 
+    [HttpGet]
+    [Route("/api/products/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ProductResponseDto>> GetProduct([FromRoute] int id)
+    {
+        var product = await _productRepository.GetAsync(p => p.Id == id, p => p.Subcategory.Category);
+
+        if (product is null)
+        {
+            return NotFound("Product not found.");
+        }
+
+        ProductResponseDto productResponseDto = _mapper.Map<ProductResponseDto>(product);
+        productResponseDto.Stock = 0;
+
+        return Ok(productResponseDto);
+    }
+
 
     [HttpPost]
-    [Route("/create")]
+    [Route("/api/products/create")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> CreateProduct([FromBody] UpsertProductRequestDto requestDto)
@@ -81,7 +112,7 @@ public class ProductsController : ApiController
             Capacity = requestDto.Capacity,
             ReplacementValue = requestDto.ReplacementValue
         };
-
+        //calculate stock
         var result = await _productRepository.AddAsync(product);
         await _productRepository.SaveAsync();
 
@@ -89,7 +120,7 @@ public class ProductsController : ApiController
     }
 
     [HttpPut]
-    [Route("{id:int}")]
+    [Route("/api/products/{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -98,7 +129,6 @@ public class ProductsController : ApiController
         if (string.IsNullOrEmpty(requestDto.Name))
         {
             return BadRequest("Name is required.");
-            //Preferably, use FluentValidation to validate the requestDto
         }
 
         var product = await _productRepository.GetByIdAsync(id);
@@ -124,7 +154,7 @@ public class ProductsController : ApiController
         product.Price = requestDto.Price;
         product.Capacity = requestDto.Capacity;
         product.ReplacementValue = requestDto.ReplacementValue;
-
+        //calculate stock 
         await _productRepository.UpdateAsync(product);
         await _productRepository.SaveAsync();
 
@@ -132,7 +162,7 @@ public class ProductsController : ApiController
     }
 
     [HttpDelete]
-    [Route("{id:int}")]
+    [Route("/api/products/{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> DeleteProduct([FromRoute] int id)
     {
