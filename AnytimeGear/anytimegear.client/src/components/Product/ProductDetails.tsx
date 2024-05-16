@@ -1,43 +1,135 @@
-import { useLoaderData } from "react-router-dom";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { SearchContext } from "../../context/SearchContext";
 import { productService } from "../../services/product.service";
+import { useParams } from "react-router-dom";
+import { IProduct } from "../../models/product.model";
+import { AspectRatio, Sheet, Skeleton } from "@mui/joy";
+import { Box, Button,  Typography, styled } from "@mui/material";
+import Chip from '@mui/joy/Chip';
 
-export async function productLoader({ params }: any) {
-    console.log(params.productId);
-    const product = await productService.fetch(params.productId);
-    return { product };
-}
+const RentButton = styled(Button)(({ theme }) => ({
+    backgroundColor: "#35977d",
+    '&:hover': {
+        backgroundColor: "#2c7e68",
+    },
+
+}));
 
 function ProductDetails() {
-    const { product }: any = useLoaderData();
+
+    const { startDate, endDate, quantity, getRentalDurationInDays } = useContext(SearchContext)
+    const { id } = useParams();
+    const [product, setProduct] = useState<IProduct>()
+    const [loading, setLoading] = useState(true);
+    const [totalPrice, setTotalPrice] = useState(0)
+    
+    const fetchProductAsync = async () => {
+        setLoading(true)
+        if (id == undefined || startDate == undefined || endDate == undefined) return
+
+        const productId = parseInt(id)
+        const product = await productService.fetchProduct(productId, startDate, endDate)
+        setProduct(product)
+        setTotalPrice(product.price * getRentalDurationInDays() * quantity!)
+        setLoading(false)
+    }
+
+    const fetchProductCallback = useCallback(fetchProductAsync, [])
+
+    useEffect(() => {
+        fetchProductCallback()
+    }, [fetchProductCallback])
 
     return (
-        <div style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-        }}>
-            <div style={{
-                color: "black",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                maxWidth: "600px",
-                padding: "20px",
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-            }}>
-                <img src={product.productPicture} alt={product.name} style={{ width: "100%" }} />
-                <h2 style={{ fontSize: "24px", margin: "10px 0" }}>{product.name}</h2>
-                <p style={{ fontSize: "18px", margin: "5px 0" }}>Brand: {product.brand}</p>
-                <p style={{ fontSize: "18px", margin: "5px 0" }}>Description: {product.description}</p>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <p style={{ fontSize: "20px", margin: "5px 0" }}>Price: ${product.price}</p>
-                    <p style={{ fontSize: "16px", margin: "5px 10px" }}>Replacement Value: ${product.replacementValue}</p>
-                </div>
-                <button style={{ padding: "10px 20px", fontSize: "18px", marginTop: "20px" }}>Rent</button>
-            </div>
-        </div>
+        <>
+            <Sheet sx={{ width: '100vw', height: `calc(100vh - 68.5px)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <AspectRatio variant="plain" ratio="3/4" sx={{ minWidth: 400, borderRadius: 20, mr: 10 }}>
+                        <Skeleton loading={loading}>
+                            <img
+                                src={
+                                    loading
+                                        ? 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
+                                        : product?.productPicture
+                                }
+                                alt=""
+                            />
+                        </Skeleton>
+                    </AspectRatio>
+                    <Box>
+                        <Typography variant="h3" gutterBottom>
+                            {`${product?.name} ${product?.model}`}
+                        </Typography>
+                        <Typography variant="h4" gutterBottom sx={{mb:5} }>
+                            {product?.brand}
+                        </Typography>
+
+                        {
+                            product?.stock && product.stock < 5 &&
+                            <Typography variant="subtitle1" sx={{ color: 'red' }}>(Only <b>{product.stock}</b> left in stock!)</Typography>
+                        }
+                        {
+                            product?.stock && product.stock >= 5 &&
+                            <Typography variant="subtitle1" color="success" sx={{ color: 'green' }}>(In stock)</Typography>
+                        }
+
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Typography variant="h4" sx={{mr: 2} }>
+                                $ {totalPrice} USD
+                            </Typography>
+                            <Chip component="span" size="lg" variant="soft" color="success">
+                                {product?.price}$/day
+                            </Chip>
+
+                        </Box>
+
+                        <Typography variant="subtitle1" gutterBottom sx={{ width: '70ch', my: 7 }}>
+                            {product?.description}
+                        </Typography>
+
+                        
+
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
+                            <Box sx={{
+                                display: 'flex', flexDirection: 'column'
+                            }} >
+                                <Chip size="lg" sx={{mb: 2} }>
+                                    ${product?.replacementValue} Replacement Value
+                                </Chip>
+
+                                <Chip size="lg" sx={{ mb: 2 }}>
+                                    Reservation for: {startDate?.format("DD.MM.YYYY")} - {endDate?.format("DD.MM.YYYY")}
+                                </Chip>
+                            </Box>
+
+                            <Box>
+
+                                <RentButton
+
+                                    variant="contained"
+
+                                    size="large"
+                                    sx={{
+                                        borderRadius: 8,
+                                        py: 1.5,
+                                    }}
+                                >
+                                    Rent now
+                                </RentButton>
+                            </Box>
+
+                        </Box>
+
+                        
+
+                    </Box>
+
+                </Box>
+            </Sheet>
+            
+        </>
+        
     );
 }
 

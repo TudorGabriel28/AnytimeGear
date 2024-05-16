@@ -31,6 +31,10 @@ export const router = createBrowserRouter([
                         path: 'search',
                         element: <SearchResults />,
                     },
+                    {
+                        path: 'products/:id',
+                        element: <ProductDetails />,
+                    },
                 ]
             },
             {
@@ -41,11 +45,7 @@ export const router = createBrowserRouter([
                 path: 'contact',
                 element: <Contact />,
             },
-            {
-                path: 'products/:productId',
-                loader: productLoader,
-                element: <ProductDetails />,
-            },
+            
             {
                 path: "admin/categories/add",
                 element: <AddCategory />

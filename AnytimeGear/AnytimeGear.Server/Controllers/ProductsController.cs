@@ -63,7 +63,26 @@ public class ProductsController : Controller
     }
 
     [HttpGet]
-    [Route("/api/products/{id:int}")]
+    [Route("api/products/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ProductResponseDto>> GetProduct([FromQuery] GetProductRequestDto request, [FromRoute] int id)
+    {
+        var product = await _productRepository.GetAsync(p => p.Id == id, p => p.Subcategory.Category);
+
+        if (product is null)
+        {
+            return NotFound("Product not found.");
+        }
+
+        ProductResponseDto productResponseDto = _mapper.Map<ProductResponseDto>(product);
+        productResponseDto.Stock = await _productRepository.GetProductStockAsync(id, request.StartDate, request.EndDate);
+
+        return Ok(productResponseDto);
+    }
+
+    [HttpGet]
+    [Route("/api/admin/products/{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ProductResponseDto>> GetProduct([FromRoute] int id)

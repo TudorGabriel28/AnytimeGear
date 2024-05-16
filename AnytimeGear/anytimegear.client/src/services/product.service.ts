@@ -3,6 +3,10 @@ import { apiClient, apiPostClient } from '../utils/api-client'
 import { IProduct, IProductList, IProductListPayload } from '../models/product.model'
 import { IGetProductResponse } from "../models/product.model";
 import { IAddProductPayload } from "../models/product.model";
+import { IProduct, IProductList, IProductListPayload } from '../models/product.model'
+import { AxiosResponse } from "axios";
+import { apiClient } from "../utils/api-client";
+import { Dayjs } from 'dayjs';
 
 class ProductService {
     async fetchAll(payload: IProductListPayload): Promise<IProductList> {
@@ -31,7 +35,7 @@ class ProductService {
   
     async fetch(id: number): Promise<IProduct> {
         try {
-            const response: AxiosResponse = await apiClient.get(`/Products/${id}`)
+            const response: AxiosResponse = await apiClient.get(`/Admin/Products/${id}`)
 
             return response.data
         } catch (err) {
@@ -39,6 +43,19 @@ class ProductService {
             throw new Error('Failed to fetch product');
         }
     }
+
+
+    async fetchProduct(id: number, startDate: Dayjs, endDate: Dayjs): Promise<IProduct> {
+        try {
+            const response: AxiosResponse = await apiClient.get(`/Products/${id}?startDate=${startDate}&endDate=${endDate}`)
+
+            return response.data
+        } catch (err) {
+            console.log(err)
+            throw new Error('Failed to fetch product');
+        }
+    }
+
     async add(payload: IAddProductPayload) {
         try {
             await apiPostClient.post("/products/create", payload).then((response) => {
@@ -72,6 +89,7 @@ class ProductService {
             });
         } catch (error) {
             console.error(error);
+            throw new Error('Failed to fetch product');
         }
     }
 }
