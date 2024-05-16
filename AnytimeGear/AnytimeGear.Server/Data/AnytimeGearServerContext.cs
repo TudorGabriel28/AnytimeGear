@@ -5,6 +5,7 @@ namespace AnytimeGear.Server.Data;
 
 public class AnytimeGearServerContext : DbContext
 {
+   
     public AnytimeGearServerContext(DbContextOptions<AnytimeGearServerContext> options)
         : base(options)
     {
