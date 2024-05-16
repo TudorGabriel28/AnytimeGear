@@ -13,6 +13,7 @@ import AddCategory from '../components/admin/AddCategory.tsx'
 import { CategoriesPage } from '../components/admin/Categories.tsx'
 import AddSubcategory from '../components/admin/AddSubcategory.tsx'
 import { SubcategoriesPage } from '../components/admin/Subcategories.tsx'
+import AddProductPage from '../components/admin/AddProduct.tsx'
 
 export const router = createBrowserRouter([
     {
@@ -23,7 +24,7 @@ export const router = createBrowserRouter([
             {
                 element: <SearchContextProvider />,
                 children: [
-                    { index: true, element: <Home />},
+                    { index: true, element: <Home /> },
                     {
                         path: 'search',
                         element: <SearchResults />,
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
             {
                 path: "admin/subcategories",
                 element: <SubcategoriesPage />
+            },
+            {
+                path: "admin/products/add",
+                element: <AddProductPage />
             },
         ],
     },

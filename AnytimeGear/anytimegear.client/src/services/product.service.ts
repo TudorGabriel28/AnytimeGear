@@ -1,12 +1,11 @@
 import { AxiosResponse } from 'axios'
-import { apiClient } from '../utils/api-client'
+import { apiClient, apiPostClient } from '../utils/api-client'
 import { IProductList, IProductListPayload } from '../models/product.model'
-import { AxiosResponse } from "axios";
-import { apiClient } from "../utils/api-client";
 import { IGetProductResponse } from "../models/product.model";
+import { IAddProductPayload } from "../models/product.model";
 
 class ProductService {
-    async fetchAll(payload: IProductListPayload ): Promise<IProductList> {
+    async fetchAll(payload: IProductListPayload): Promise<IProductList> {
         try {
             const response: AxiosResponse = await apiClient.post('/Products/', payload)
 
@@ -27,6 +26,17 @@ class ProductService {
         } catch (err) {
             console.log(err)
             return { items: [], count: 0 }
+        }
+    }
+    async add(payload: IAddProductPayload) {
+        try {
+            await apiPostClient.post("/products", payload).then((response) => {
+                console.log("Product added successfully: " + response.status);
+            }, (error) => {
+                console.log(error);
+            });
+        } catch (error) {
+            console.error(error);
         }
     }
 }
