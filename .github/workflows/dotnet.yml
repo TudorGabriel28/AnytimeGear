@@ -27,4 +27,4 @@ jobs:
       run: dotnet build --no-restore
       # Execute all unit tests in the solution
     - name: Execute unit tests
-      run: dotnet test UnitTests\UnitTests\UnitTests.csproj
+      run: dotnet test UnitTests/UnitTests/UnitTests.csproj
