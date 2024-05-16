@@ -7,9 +7,9 @@ export interface IProduct {
     brand: string
     model: string
     description: string
-    productpicture: string
+    productPicture: string
     price: number
-    quantity: number
+    capacity: number
     replacementValue: number
     subcategory: ISubcategory
     stock: number
@@ -40,6 +40,7 @@ export interface IAddProductPayload {
     price: number;
     capacity: number;
     replacementValue: number;
+    subcategoryId: number;
 }
 
 export interface IGetProductResponse extends IGetAll<IProduct[]> { }

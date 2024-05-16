@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
 import { apiClient, apiPostClient } from '../utils/api-client'
-import { IProductList, IProductListPayload } from '../models/product.model'
+import { IProduct, IProductList, IProductListPayload } from '../models/product.model'
 import { IGetProductResponse } from "../models/product.model";
 import { IAddProductPayload } from "../models/product.model";
 
@@ -13,25 +13,60 @@ class ProductService {
         } catch (err) {
             console.log(err)
             return {
-                items: [], totalCount: 0, minPrice: 0, maxPrice: 0, brands: [], sortKey: 'createdAt', sortOrder: 'asc'
+                items: [], totalCount: 0, minPrice: 0, maxPrice: 0, brands: [], sortKey: 'createdAt', sortOrder: 'asc', checkedBrandNames: []
             }
         }
     }
+    async fetchAllAdmin(): Promise<IProduct[]> {
+        try {
+            const response: AxiosResponse = await apiClient.get('/Products/Admin')
 
-    async fetch(id: number): Promise<IGetProductResponse> {
+            return response.data
+        } catch (err) {
+            console.log(err)
+            return []
+        }
+
+    }
+  
+    async fetch(id: number): Promise<IProduct> {
         try {
             const response: AxiosResponse = await apiClient.get(`/Products/${id}`)
 
             return response.data
         } catch (err) {
             console.log(err)
-            return { items: [], count: 0 }
+            throw new Error('Failed to fetch product');
         }
     }
     async add(payload: IAddProductPayload) {
         try {
-            await apiPostClient.post("/products", payload).then((response) => {
+            await apiPostClient.post("/products/create", payload).then((response) => {
                 console.log("Product added successfully: " + response.status);
+            }, (error) => {
+                console.log(error);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async update(payload: IAddProductPayload, id: number) {
+        try {
+            await apiClient.put(`/products/${id}`, payload).then((response) => {
+                console.log("Product edited successfully: " + response.status);
+            }, (error) => {
+                console.log(error);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async delete(id: number) {
+        try {
+            await apiClient.delete(`/products/${id}`).then((response) => {
+                console.log("Product deleted successfully: " + response.status);
             }, (error) => {
                 console.log(error);
             });

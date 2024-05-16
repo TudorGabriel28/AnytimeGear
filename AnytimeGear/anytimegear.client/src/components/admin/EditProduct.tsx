@@ -1,15 +1,37 @@
 import { Box, Button, TextField } from "@mui/material";
 import { productService } from "../../services/product.service";
-import { IAddProductPayload } from "../../models/product.model";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { IAddProductPayload,  } from "../../models/product.model";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
-export default function AddProductPage() {
-    const [name, setName] = useState<string>("");
-    const [brand, setBrand] = useState<string>("");
-    const [model, setModel] = useState<string>("");
-    const [description, setDescription] = useState<string>("");
-    const [productPicture, setProductPicture] = useState<string>("");
+export default function EditProductPage() {
+    const { id } = useParams();
+    useEffect(() => {
+        getProduct();
+    }, []);
+
+    async function getProduct() {
+        if (id === undefined) return;
+        console.log(`id = ${id}`);
+        const response = await productService.fetch(parseInt(id));
+        console.log(`name = ${response.name}`);
+        setName(response.name);
+        setBrand(response.brand);
+        setModel(response.model);
+        setDescription(response.description);
+        setProductPicture(response.productPicture);
+        setPrice(response.price);
+        setCapacity(response.capacity);
+        setReplacementValue(response.replacementValue);
+        setsubcategoryId(response.subcategory.id);
+    }
+    //const { product }: any = useLoaderData();
+
+    const [name, setName] = useState<string>(" ");
+    const [brand, setBrand] = useState<string>(" ");
+    const [model, setModel] = useState<string>(" ");
+    const [description, setDescription] = useState<string>(" ");
+    const [productPicture, setProductPicture] = useState<string>(" ");
     const [price, setPrice] = useState<number>(0);
     const [capacity, setCapacity] = useState<number>(0);
     const [replacementValue, setReplacementValue] = useState<number>(0);
@@ -60,10 +82,13 @@ export default function AddProductPage() {
         console.log("Product replacement value: " + event.target.value);
     }
 
-    async function addProduct() {
-        console.log("Adding product: " + name);
+    async function editProduct() {
+        console.log("Editing product: " + name);
         const payload: IAddProductPayload = { name, brand, model, description, productPicture, price, capacity, replacementValue, subcategoryId };
-        await productService.add(payload);
+        if (id === undefined) return;
+        console.log("Editing product: " + id);
+        await productService.update(payload, parseInt(id));
+        console.log("Edited");
     }
 
     return (
@@ -75,11 +100,11 @@ export default function AddProductPage() {
             noValidate
             autoComplete="off"
         >
-            <h2>Add Product</h2>
+            <h2>Edit Product</h2>
             <div>
-            <Link to="/admin/products">
-                <button>Back</button>
-            </Link>
+                <Link to="/admin/products">
+                    <button>Back</button>
+                </Link>
             </div>
             <TextField
                 id="outlined-controlled"
@@ -125,17 +150,10 @@ export default function AddProductPage() {
 
             <TextField
                 id="outlined-controlled"
-                label="Subcategory"
-                value={subcategoryId}
-                onChange={handleSubcategoryIdSubmit}
-            />
-            <TextField
-                id="outlined-controlled"
                 label="Product Capacity"
                 value={capacity}
                 onChange={handleCapacitySubmit}
             />
-
 
             <TextField
                 id="outlined-controlled"
@@ -143,19 +161,26 @@ export default function AddProductPage() {
                 value={replacementValue}
                 onChange={handleReplacementValueSubmit}
             />
+
+            <TextField
+                id="outlined-controlled"
+                label="Subcategory Id"
+                value={subcategoryId}
+                onChange={handleSubcategoryIdSubmit}
+            />
             <Button
-                onClick={async () => { await addProduct(); }}
+                onClick={async () => { await editProduct(); }}
                 sx={{
                     bgcolor: 'black',
                     color: 'white',
                     borderRadius: '12px',
                     fontWeight: 'bold',
                     width: '50px',
-                    '&:hover': {
-                        bgcolor: 'black',
+                    '&:hover': { 
+                        bgcolor: 'black', 
                     }
                 }}
-            > Add </Button>
+            > Edit </Button>
         </Box>
     );
 }
