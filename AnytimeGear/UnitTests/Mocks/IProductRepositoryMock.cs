@@ -34,7 +34,6 @@ public class IProductRepositoryMock
         {
             Id = 1,
             Name = "Subcategory 1",
-            CategoryId = category.Id,
             Category = new Category { Id = 1, Name = "Category 1" }
         };
 
@@ -50,7 +49,6 @@ public class IProductRepositoryMock
                 Price = 100,
                 Capacity = 10,
                 ReplacementValue = 500,
-                CreatedAt = DateTime.Now,
                 Subcategory = subcategory,
                 Rentals = []
             });

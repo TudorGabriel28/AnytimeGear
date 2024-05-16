@@ -22,6 +22,9 @@ public class ProductsControllerTests
         // Arrange
         var mockProductRepository = new Mock<IProductRepository>();
         var mockMapper = new Mock<IMapper>();
+        var mockCategoryRepository = new Mock<ICategoryRepository>();
+        var mockSubcategoryRepository = new Mock<ISubcategoryRepository>();
+
         var mockRequest = new RetrieveProductsRequestDto
         {
             StartDate = DateTime.Now.ToString(),
@@ -40,7 +43,7 @@ public class ProductsControllerTests
                 Description = "Description 1",
                 Price = 100,
                 Capacity = 10,
-                Subcategory = new Subcategory { Id= 1, Name = "Subcategory 1" , Category = new Category { Name = "Category 1", Id= 2 }, CategoryId=2 },
+                Subcategory = new Subcategory { Id= 1, Name = "Subcategory 1" , Category = new Category { Name = "Category 1", Id= 2 }},
             },
         };
         var mockProductBrands = new List<ProductBrandDto>
@@ -51,7 +54,7 @@ public class ProductsControllerTests
         mockProductRepository.Setup(repo => repo.GetAllAsync(mockRequest)).ReturnsAsync(mockProducts);
         mockProductRepository.Setup(repo => repo.GetBrandsAsync(mockRequest)).ReturnsAsync(mockProductBrands);
 
-        var controller = new ProductsController(mockProductRepository.Object, mockMapper.Object);
+        var controller = new ProductsController(mockProductRepository.Object, mockMapper.Object, mockCategoryRepository.Object, mockSubcategoryRepository.Object);
 
         // Act
         var result = await controller.RetrieveProducts(mockRequest);

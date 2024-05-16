@@ -2,6 +2,7 @@
 using AnytimeGear.Server.Dtos;
 using AnytimeGear.Server.Models;
 using AnytimeGear.Server.Repositories.Interfaces;
+using AnytimeGear.Server.Validators;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
@@ -28,8 +29,9 @@ public class CategoryControllerTests
         };
 
         mockCategoryRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync(mockCategories);
+        Mock<ICreateCategoryValidator> mockCreateCategoryValidator = new Mock<ICreateCategoryValidator>();
 
-        var controller = new CategoriesController(mockCategoryRepository.Object);
+        var controller = new CategoriesController(mockCategoryRepository.Object, mockCreateCategoryValidator.Object);
 
         // Act
         var result = await controller.RetrieveCategories();
