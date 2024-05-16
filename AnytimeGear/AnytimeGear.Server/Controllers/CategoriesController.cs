@@ -2,16 +2,20 @@
 using AnytimeGear.Server.Dtos;
 using AnytimeGear.Server.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using AnytimeGear.Server.Validators;
 
 namespace AnytimeGear.Server.Controllers;
 
 public class CategoriesController : ApiController
 {
     private readonly ICategoryRepository _categoryRepository;
+    private readonly ICreateCategoryValidator _createCategoryValidator; 
 
-    public CategoriesController(ICategoryRepository categoryRepository)
+    public CategoriesController(ICategoryRepository categoryRepository, ICreateCategoryValidator createCategoryValidator)
     {
         _categoryRepository = categoryRepository;
+        _createCategoryValidator = createCategoryValidator;
+
     }
 
     [HttpGet]
@@ -54,16 +58,17 @@ public class CategoriesController : ApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> CreateCategory([FromBody] UpsertCategoryRequestDto requestDto)
     {
-        if (string.IsNullOrEmpty(requestDto.Name))
-        {
-            return BadRequest("Name is required.");
-            //Preferably, use FluentValidation to validate the requestDto
-        }
-
         var category = new Category
         {
             Name = requestDto.Name
         };
+
+        var validationResult = await _createCategoryValidator.ValidateAsync(category);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
 
         var result = await _categoryRepository.AddAsync(category);
         await _categoryRepository.SaveAsync();

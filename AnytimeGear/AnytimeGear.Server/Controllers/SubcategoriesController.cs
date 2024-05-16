@@ -2,6 +2,7 @@
 using AnytimeGear.Server.Dtos;
 using AnytimeGear.Server.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using AnytimeGear.Server.Validators;
 
 namespace AnytimeGear.Server.Controllers;
 
@@ -9,11 +10,13 @@ public class SubcategoriesController : ApiController
 {
     private readonly ISubcategoryRepository _subcategoryRepository;
     private readonly ICategoryRepository _categoryRepository;
+    private readonly ICreateSubcategoryValidator _createsubcategoryValidator;
 
-    public SubcategoriesController(ISubcategoryRepository subcategoryRepository, ICategoryRepository categoryRepository)
+    public SubcategoriesController(ISubcategoryRepository subcategoryRepository, ICategoryRepository categoryRepository, ICreateSubcategoryValidator createsubcategoryValidator)
     {
         _subcategoryRepository = subcategoryRepository;
         _categoryRepository = categoryRepository;
+        _createsubcategoryValidator = createsubcategoryValidator;
     }
 
     [HttpGet]
@@ -73,11 +76,9 @@ public class SubcategoriesController : ApiController
     public async Task<ActionResult> CreateSubcategory([FromBody] UpsertSubcategoryRequestDto requestDto)
     {
         var category = await _categoryRepository.GetAsync(e => e.Name == requestDto.CategoryName);
-
-        if (string.IsNullOrEmpty(requestDto.Name) || category is null)
+        if(category is null)
         {
-            return BadRequest("Incorrect data.");
-            //Preferably, use FluentValidation to validate the requestDto
+            return BadRequest("Category not found.");
         }
 
         var subcategory = new Subcategory
@@ -85,6 +86,13 @@ public class SubcategoriesController : ApiController
             Name = requestDto.Name,
             Category = category
         };
+
+        var validationResult = await _createsubcategoryValidator.ValidateAsync(subcategory);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
 
         var result = await _subcategoryRepository.AddAsync(subcategory);
         await _subcategoryRepository.SaveAsync();

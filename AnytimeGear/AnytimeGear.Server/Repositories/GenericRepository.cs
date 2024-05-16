@@ -75,6 +75,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await dbSet.FindAsync(id);
     }
 
+    public virtual async Task<bool> ExistsAsync(Expression<Func<T, bool>> expression)
+    {
+        return await dbSet.AnyAsync(expression);
+    }
+
     public async Task<T> AddAsync(T entity)
     {
        var result = await dbContext.AddAsync(entity);
