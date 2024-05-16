@@ -6,11 +6,14 @@ using AnytimeGear.Server.Infrastructure;
 using AutoMapper;
 using AnytimeGear.Server.Misc;
 using AnytimeGear.Server.Validators;
+using Microsoft.AspNetCore.Identity;
+using AnytimeGear.Server.Models;
 
 var CORSCustomAllowedOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<AnytimeGearServerContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AnytimeGearServerContext") ?? throw new InvalidOperationException("Connection string 'AnytimeGearServerContext' not found.")));
+
+builder.Services.AddDbContext<AnytimeGearContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AnytimeGearContext") ?? throw new InvalidOperationException("Connection string 'AnytimeGearServerContext' not found.")));
 
 builder.Services.AddCors(options =>
 {
@@ -23,6 +26,7 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod();
                       });
 });
+
 // Add services to the container.
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -32,14 +36,24 @@ builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICreateCategoryValidator, CreateCategoryValidator>();
 builder.Services.AddScoped<ICreateSubcategoryValidator, CreateSubcategoryValidator>();
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+
 builder.Services.AddControllers();
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<User>(opt =>
+{
+    opt.Password.RequiredLength = 8;
+    opt.User.RequireUniqueEmail = true;
+}).AddEntityFrameworkStores<AnytimeGearContext>();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new MappingProfile());
 });
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -62,6 +76,7 @@ app.UseCors(CORSCustomAllowedOrigins);
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapIdentityApi<User>();
 
 app.MapFallbackToFile("/index.html");
 
