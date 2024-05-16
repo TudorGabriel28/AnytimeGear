@@ -14,7 +14,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.LastName).IsRequired();
         builder.Property(u => u.ProfilePicture).IsRequired(false);
         builder.Property(u => u.CreatedOn).IsRequired();
-        builder.Property(u => u.UpdatedOn).IsRequired();
+        builder.Property(u => u.UpdatedOn).IsRequired(false);
 
 
         builder.HasMany(u => u.Addresses)
