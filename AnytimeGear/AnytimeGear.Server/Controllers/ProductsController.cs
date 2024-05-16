@@ -31,7 +31,6 @@ public class ProductsController : ApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<ProductListResponseDto>> RetrieveProducts(RetrieveProductsRequestDto request)
     {
-
         ICollection<ProductResponseDto> products = await _productRepository.GetAllAsync(request);
         ICollection<ProductBrandDto> productBrands = await _productRepository.GetBrandsAsync(request);
 
@@ -50,7 +49,6 @@ public class ProductsController : ApiController
         return Ok(response);
     }
 
-
     [HttpPost]
     [Route("/create")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -63,7 +61,7 @@ public class ProductsController : ApiController
         }
 
         Subcategory subcategory = await _subCategoryRepository.GetAsync(e => e.Id == requestDto.SubcategoryId, sc => sc.Category);
-        
+
         if (subcategory == null)
         {
             return BadRequest("Subcategory not found.");
@@ -104,7 +102,7 @@ public class ProductsController : ApiController
         var product = await _productRepository.GetByIdAsync(id);
 
         if (product is null)
-    {
+        {
             return NotFound("Product not found.");
         }
 
@@ -145,5 +143,15 @@ public class ProductsController : ApiController
         }
 
         return NoContent();
+    }
+
+    [HttpGet]
+    [Route("/admin/products")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ICollection<Product>> SearchProductsByName([FromQuery] string name)
+    {
+        ICollection<Product> products = await _productRepository.GetAllAsync(p => p.Name.Contains(name));
+
+        return products;
     }
 }
