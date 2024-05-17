@@ -1,18 +1,19 @@
-﻿namespace AnytimeGear.Server.Models;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class User
+namespace AnytimeGear.Server.Models;
+
+public class User : IdentityUser<int>
 {
-    public int Id { get; set; }
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
-    public int Phone { get; set; }
-    public required string Email { get; set; }
-    public required string Password { get; set; }
+    public User()
+    {
+        
+    }
+
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
     public string? ProfilePicture { get; set; }
-    public required string Role { get; set; }
-    public bool Activated { get; set; }
-    public string? ActivationToken { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public List<Address> Addresses { get; set; } = [];
-    public List<Rental> Rentals { get; set; } = [];
+    public DateTime CreatedOn { get; set; }
+    public DateTime? UpdatedOn { get; set; }
+    public ICollection<Address> Addresses { get; set; } = [];
+    public ICollection<Rental> Rentals { get; set; } = [];
 }

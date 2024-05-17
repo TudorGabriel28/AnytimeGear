@@ -10,5 +10,8 @@ public class MappingProfile : Profile
     {
         CreateMap<Category, CategoryResponseDto>().ReverseMap();
         CreateMap<Product, ProductResponseDto>().ReverseMap();
+        CreateMap<RegisterRequestDto, User>()
+            .ForMember(d => d.UserName, o => o.MapFrom(s => s.Email))
+            .ForMember(d => d.CreatedOn, o => o.MapFrom(s => DateTime.UtcNow));
     }
 }

@@ -10,9 +10,9 @@ public class ProductResponseDto
     public string Model { get; set; }
     public string Description { get; set; }
     public string ProductPicture { get; set; }
-    public short Price { get; set; }
+    public decimal Price { get; set; }
     public int Capacity { get; set; }
-    public short ReplacementValue { get; set; }
+    public decimal ReplacementValue { get; set; }
     public Subcategory Subcategory { get; set; }
     public int Stock { get; set; }
 }

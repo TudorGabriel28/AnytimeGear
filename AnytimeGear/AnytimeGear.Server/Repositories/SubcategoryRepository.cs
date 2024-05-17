@@ -6,7 +6,7 @@ namespace AnytimeGear.Server.Repositories;
 
 public class SubcategoryRepository : GenericRepository<Subcategory>, ISubcategoryRepository
 {
-    public SubcategoryRepository(AnytimeGearServerContext context) : base(context)
+    public SubcategoryRepository(AnytimeGearContext context) : base(context)
     {
     }
 

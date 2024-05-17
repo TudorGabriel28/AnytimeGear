@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnytimeGear.Server.Migrations
 {
-    [DbContext(typeof(AnytimeGearServerContext))]
+    [DbContext(typeof(AnytimeGearContext))]
     [Migration("20240515204650_InitialCreate")]
     partial class InitialCreate
     {

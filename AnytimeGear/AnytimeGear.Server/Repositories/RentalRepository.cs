@@ -6,7 +6,7 @@ namespace AnytimeGear.Server.Repositories;
 
 public class RentalRepository : GenericRepository<Rental>, IRentalRepository
 {
-    public RentalRepository(AnytimeGearServerContext context) : base(context)
+    public RentalRepository(AnytimeGearContext context) : base(context)
     {
     }
 }
