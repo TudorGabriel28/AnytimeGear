@@ -28,12 +28,26 @@ public class ProductsController : Controller
     [HttpGet]
     [Route("/api/products/admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<ProductResponseDto>> RetrieveProducts()
+    public async Task<ActionResult<ProductResponseDto>> RetrieveProducts([FromQuery] string name = "")
     {
+        var products = string.IsNullOrEmpty(name) ?
+            await _productRepository.GetAllAsync(p => p.Subcategory, p => p.Subcategory.Category) :
+            await _productRepository.GetAllAsync(p => p.Name.Contains(name), p => p.Subcategory, p => p.Subcategory.Category);
 
-        var products = await _productRepository.GetAllAsync(p => p.Subcategory, p => p.Subcategory.Category);
-
-        var response = products.Select(e => new ProductResponseDto { Id = e.Id, Name = e.Name, Brand = e.Brand, Capacity = e.Capacity, Description = e.Description, Model = e.Model, Price = e.Price, ProductPicture = e.ProductPicture, ReplacementValue = e.ReplacementValue, Stock = 0, Subcategory = e.Subcategory});
+        var response = products.Select(e => new ProductResponseDto
+        {
+            Id = e.Id,
+            Name = e.Name,
+            Brand = e.Brand,
+            Capacity = e.Capacity,
+            Description = e.Description,
+            Model = e.Model,
+            Price = e.Price,
+            ProductPicture = e.ProductPicture,
+            ReplacementValue = e.ReplacementValue,
+            Stock = 0,
+            Subcategory = e.Subcategory
+        });
 
         return Ok(response);
     }
@@ -43,7 +57,6 @@ public class ProductsController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<ProductListResponseDto>> RetrieveProducts(RetrieveProductsRequestDto request)
     {
-
         ICollection<ProductResponseDto> products = await _productRepository.GetAllAsync(request);
         ICollection<ProductBrandDto> productBrands = await _productRepository.GetBrandsAsync(request);
 
@@ -113,7 +126,7 @@ public class ProductsController : Controller
         }
 
         Subcategory subcategory = await _subCategoryRepository.GetAsync(e => e.Id == requestDto.SubcategoryId, sc => sc.Category);
-        
+
         if (subcategory == null)
         {
             return BadRequest("Subcategory not found.");
@@ -153,7 +166,7 @@ public class ProductsController : Controller
         var product = await _productRepository.GetByIdAsync(id);
 
         if (product is null)
-    {
+        {
             return NotFound("Product not found.");
         }
 
@@ -194,5 +207,15 @@ public class ProductsController : Controller
         }
 
         return NoContent();
+    }
+
+    [HttpGet]
+    [Route("/admin/products")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ICollection<Product>> SearchProductsByName([FromQuery] string name)
+    {
+        ICollection<Product> products = await _productRepository.GetAllAsync(p => p.Name.Contains(name));
+
+        return products;
     }
 }
