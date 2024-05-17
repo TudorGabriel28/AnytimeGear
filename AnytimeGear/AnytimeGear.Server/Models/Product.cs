@@ -12,5 +12,5 @@ public class Product
     public int Capacity { get; set; }
     public short ReplacementValue { get; set; }
     public Subcategory Subcategory { get; set; }
-    public List<Rental> Rentals { get; set; } = [];
+    public virtual List<Rental> Rentals { get; set; } = [];
 }

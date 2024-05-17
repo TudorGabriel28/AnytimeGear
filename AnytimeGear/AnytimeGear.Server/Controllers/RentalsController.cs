@@ -18,6 +18,31 @@ public class RentalsController : ApiController
         _userRepository = userRepository;
     }
 
+    [HttpGet]
+    [Route("")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<RentalDto>>> GetRentals([FromQuery] int userId)
+    {
+        var rentals = await _rentalRepository.GetAllAsync(r => r.User.Id == userId, r => r.User, r => r.Product);
+        
+        List<RentalDto> result = [];
+
+        foreach (var rental in rentals)
+        {
+            result.Add(new RentalDto
+            {
+                Id = rental.Id,
+                ProductName = rental.Product.Name,
+                Price = (int)(rental.Product.Price * rental.Quantity * (rental.EndPeriod - rental.StartPeriod).TotalDays),
+                StartDate = rental.StartPeriod.ToString("dd-MM-yyyy"),
+                EndDate = rental.EndPeriod.ToString("dd-MM-yyyy"),
+                Quantity = rental.Quantity,
+                Completed = rental.Completed
+            });
+        }
+        return Ok(result);
+    }
+
     [HttpPost]
     [Route("")]
     [ProducesResponseType(StatusCodes.Status201Created)]

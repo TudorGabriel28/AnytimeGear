@@ -16,8 +16,10 @@ import { INavLink } from '../../models/navigation-bar.model'
 
 const pages: INavLink[] = [
     { title: 'Home', route: '/' },
+    { title: 'My Rentals', route: 'rentals' },
     { title: 'About Us', route: 'about' },
     { title: 'Contact', route: 'contact' },
+    
 ]
 
 const settings = ['Profile', 'Account', 'Logout']

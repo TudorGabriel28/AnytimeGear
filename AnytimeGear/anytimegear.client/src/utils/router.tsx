@@ -16,6 +16,7 @@ import { SubcategoriesPage } from '../components/admin/Subcategories.tsx'
 import AddProductPage from '../components/admin/AddProduct.tsx'
 import { ProductsPage } from '../components/admin/Products.tsx'
 import EditProductPage from '../components/admin/EditProduct.tsx'
+import Rentals from '../components/Rentals/Rentals.tsx'
 
 export const router = createBrowserRouter([
     {
@@ -45,7 +46,10 @@ export const router = createBrowserRouter([
                 path: 'contact',
                 element: <Contact />,
             },
-            
+            {
+                path: 'rentals',
+                element: <Rentals />,
+            },
             {
                 path: "admin/categories/add",
                 element: <AddCategory />

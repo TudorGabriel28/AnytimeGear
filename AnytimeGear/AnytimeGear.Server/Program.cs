@@ -6,6 +6,7 @@ using AnytimeGear.Server.Infrastructure;
 using AutoMapper;
 using AnytimeGear.Server.Misc;
 using AnytimeGear.Server.Validators;
+using System.Text.Json.Serialization;
 
 var CORSCustomAllowedOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -33,7 +34,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICreateCategoryValidator, CreateCategoryValidator>();
 builder.Services.AddScoped<ICreateSubcategoryValidator, CreateSubcategoryValidator>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x =>
+   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new MappingProfile());
