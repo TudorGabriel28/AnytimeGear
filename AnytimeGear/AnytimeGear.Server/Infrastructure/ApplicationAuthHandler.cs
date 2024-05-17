@@ -39,9 +39,10 @@ public class ApplicationAuthHandler : AuthenticationHandler<ApplicationAuthOptio
             var tokenHandler = new JwtSecurityTokenHandler();
             var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
             {
-                ValidateIssuer = true,
+                ValidateIssuer = false,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
+                ValidateAudience = false,
                 IssuerSigningKey = new SymmetricSecurityKey(key)
             }, out SecurityToken validatedToken);
 

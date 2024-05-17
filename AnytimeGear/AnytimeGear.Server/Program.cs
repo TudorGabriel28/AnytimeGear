@@ -67,6 +67,7 @@ builder.Services.AddAuthentication("CustomScheme")
         ValidateIssuer = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
+        ValidateAudience = false,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
