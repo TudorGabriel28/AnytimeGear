@@ -2,19 +2,17 @@ import { createContext, useContext, useState } from 'react';
 
 interface AuthContext {
     accessToken: string | null;
-    refreshToken: string | null;
     expiresIn: number | null;
-    setAuthContext: (authData: { accessToken: string | null, refreshToken: string | null, expiresIn: number | null }) => void;
+    setAuthContext: (authData: { accessToken: string | null, expiresIn: number | null }) => void;
 }
 
 const AuthContext = createContext<AuthContext | null>(null);
 
 export const AuthProvider = ({ children }) => {
     const [accessToken, setAccessTokenState] = useState<string | null>(sessionStorage.getItem('accessToken'));
-    const [refreshToken, setRefreshTokenState] = useState<string | null>(sessionStorage.getItem('refreshToken'));
     const [expiresIn, setExpiresInState] = useState<number | null>(Number(sessionStorage.getItem('expiresIn')) || null);
 
-    const setAuthContext = (authData: { accessToken: string | null, refreshToken: string | null, expiresIn: number }) => {
+    const setAuthContext = (authData: { accessToken: string | null, expiresIn: number | null }) => {
 
         if (authData.accessToken) {
             sessionStorage.setItem('accessToken', authData.accessToken);
@@ -22,11 +20,6 @@ export const AuthProvider = ({ children }) => {
             sessionStorage.removeItem('accessToken');
         }
 
-        if (authData.refreshToken) {
-            sessionStorage.setItem('refreshToken', authData.refreshToken);
-        } else {
-            sessionStorage.removeItem('refreshToken');
-        }
 
         if (authData.expiresIn) {
             sessionStorage.setItem('expiresIn', authData.expiresIn.toString());
@@ -35,12 +28,11 @@ export const AuthProvider = ({ children }) => {
         }
 
         setAccessTokenState(authData.accessToken);
-        setRefreshTokenState(authData.refreshToken);
         setExpiresInState(authData.expiresIn);
     };
 
     return (
-        <AuthContext.Provider value={{ accessToken, refreshToken, expiresIn, setAuthContext }}>
+        <AuthContext.Provider value={{ accessToken, expiresIn, setAuthContext }}>
             {children}
         </AuthContext.Provider>
     );

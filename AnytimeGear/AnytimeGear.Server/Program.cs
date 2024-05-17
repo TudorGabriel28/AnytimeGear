@@ -19,6 +19,7 @@ var key = Encoding.UTF8.GetBytes(builder?.Configuration["Jwt:Key"]);
 builder.Services.AddDbContext<AnytimeGearContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AnytimeGearContext") ?? throw new InvalidOperationException("Connection string 'AnytimeGearServerContext' not found.")));
 
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: CORSCustomAllowedOrigins,
@@ -64,17 +65,15 @@ builder.Services.AddAuthentication("CustomScheme")
     {
         LogValidationExceptions = true,
         ValidateIssuer = true,
-        ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
-
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<User>(opt =>
+
+builder.Services.AddIdentity<User, ApplicationRole>(opt =>
 {
     opt.Password.RequiredLength = 8;
     opt.Password.RequireDigit = true;
@@ -84,8 +83,8 @@ builder.Services.AddIdentityApiEndpoints<User>(opt =>
     opt.User.RequireUniqueEmail = true;
     opt.SignIn.RequireConfirmedPhoneNumber = false;
     opt.SignIn.RequireConfirmedEmail = false;
-}).AddDefaultTokenProviders()
-  .AddEntityFrameworkStores<AnytimeGearContext>();
+}).AddEntityFrameworkStores<AnytimeGearContext>()
+  .AddDefaultTokenProviders();
 
 
 
@@ -112,7 +111,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapIdentityApi<User>();
 
 app.MapFallbackToFile("/index.html");
 

@@ -15,6 +15,7 @@ public class ApplicationAuthHandler : AuthenticationHandler<ApplicationAuthOptio
         IOptionsMonitor<ApplicationAuthOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder) : base(options, logger, encoder)
+    
     {
     }
 
@@ -39,7 +40,6 @@ public class ApplicationAuthHandler : AuthenticationHandler<ApplicationAuthOptio
             var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key)

@@ -1,10 +1,12 @@
 ﻿using AnytimeGear.Server.Dtos;
 using AnytimeGear.Server.Models;
 using AnytimeGear.Server.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AnytimeGear.Server.Controllers;
 
+[Authorize(AuthenticationSchemes = "CustomScheme")]
 public class RentalsController : ApiController
 {
     private readonly IRentalRepository _rentalRepository;
