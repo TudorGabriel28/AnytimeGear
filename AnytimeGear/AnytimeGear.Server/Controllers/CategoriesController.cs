@@ -4,6 +4,7 @@ using AnytimeGear.Server.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using AnytimeGear.Server.Validators;
 
+
 namespace AnytimeGear.Server.Controllers;
 
 public class CategoriesController : ApiController

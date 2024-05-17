@@ -7,18 +7,18 @@ using AutoMapper;
 using AnytimeGear.Server.Misc;
 using AnytimeGear.Server.Validators;
 using AnytimeGear.Server.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
-using System.Text.Json.Serialization;
+using AnytimeGear.Server.Infrastructure.Abstractions;
 
 var CORSCustomAllowedOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
-var key = Encoding.ASCII.GetBytes(builder?.Configuration["Jwt:Key"]);
+var key = Encoding.UTF8.GetBytes(builder?.Configuration["Jwt:Key"]);
 
 builder.Services.AddDbContext<AnytimeGearContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AnytimeGearContext") ?? throw new InvalidOperationException("Connection string 'AnytimeGearServerContext' not found.")));
+
 
 builder.Services.AddCors(options =>
 {
@@ -42,6 +42,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICreateCategoryValidator, CreateCategoryValidator>();
 builder.Services.AddScoped<ICreateSubcategoryValidator, CreateSubcategoryValidator>();
 builder.Services.AddScoped<IRegisterRequestValidator, RegisterRequestValidator>();
+builder.Services.AddScoped<IUserProvider, UserProvider>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -54,25 +55,27 @@ builder.Services.AddSingleton(mapper);
 
 builder.Services.AddControllers();
 
-builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication("CustomScheme")
+.AddScheme<ApplicationAuthOptions, ApplicationAuthHandler>("CustomScheme", options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
+    options.SecretKey = builder.Configuration["Jwt:Key"];
+})
+.AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        LogValidationExceptions = true,
         ValidateIssuer = true,
-        ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
+        ValidateAudience = false,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<User>(opt =>
+
+builder.Services.AddIdentity<User, ApplicationRole>(opt =>
 {
     opt.Password.RequiredLength = 8;
     opt.Password.RequireDigit = true;
@@ -82,8 +85,8 @@ builder.Services.AddIdentityApiEndpoints<User>(opt =>
     opt.User.RequireUniqueEmail = true;
     opt.SignIn.RequireConfirmedPhoneNumber = false;
     opt.SignIn.RequireConfirmedEmail = false;
-}).AddDefaultTokenProviders()
-  .AddEntityFrameworkStores<AnytimeGearContext>();
+}).AddEntityFrameworkStores<AnytimeGearContext>()
+  .AddDefaultTokenProviders();
 
 
 
@@ -106,10 +109,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors(CORSCustomAllowedOrigins);
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapIdentityApi<User>();
 
 app.MapFallbackToFile("/index.html");
 

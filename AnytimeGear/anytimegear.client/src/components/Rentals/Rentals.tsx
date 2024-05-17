@@ -3,6 +3,7 @@ import RentalTable, { RentalTableData } from "./RentalTable";
 import { rentalService } from "../../services/rental.service";
 import { Box, Typography } from "@mui/material";
 import { useAuth } from "../../auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Rentals() {
 
@@ -28,11 +29,12 @@ function Rentals() {
 
     const [rentals, setRentals] = useState<RentalTableData[]>([])
     const { accessToken } = useAuth()
+    const navigate = useNavigate()
 
     const fetchRentalsAsync = async () => {
-        if (accessToken == null) return
+        if (accessToken == null) navigate('/sign-in')
 
-        const rentals = await rentalService.fetchAll(accessToken);
+        const rentals = await rentalService.fetchAll(accessToken!);
         const formattedRentals = rentals.map(r => createData(r.id, r.productName, r.price, r.startDate, r.endDate, r.quantity, r.completed ? 'Completed' : 'Active'))
         console.log(formattedRentals)
 

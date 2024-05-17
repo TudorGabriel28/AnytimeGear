@@ -3,7 +3,6 @@ import { IProduct } from "./product.model";
 
 export interface ICreateRentalPayload {
     productId: number,
-    userId: number,
     quantity: number,
     startDate: Dayjs,
     endDate: Dayjs

@@ -52,7 +52,7 @@ function ProductDetails() {
 
         const productId = parseInt(id!)
         
-        await rentalService.create({ productId, userId: 1, startDate, endDate, quantity }, accessToken)
+        await rentalService.create({ productId, startDate, endDate, quantity }, accessToken)
 
         setOpenAlert(true)
 

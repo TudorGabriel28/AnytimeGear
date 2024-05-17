@@ -16,7 +16,7 @@ import { INavLink } from '../../models/navigation-bar.model'
 import { useAuth } from '../../auth/AuthContext'
 
 
-const settings = ['Profile', 'Account', 'SignIn']
+const settings = ['Profile', 'Account', 'Log out']
 
 function NavigationBar() {
     const { expiresIn, accessToken } = useAuth()

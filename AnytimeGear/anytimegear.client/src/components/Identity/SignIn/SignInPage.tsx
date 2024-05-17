@@ -33,11 +33,11 @@ const SignInPage = () => {
         event.preventDefault();
 
         const loginRequest: ILoginRequest = { ...formData };
-        const { accessToken, refreshToken, expiresIn } = await authService.login(loginRequest);
+        const { accessToken, expiresIn } = await authService.login(loginRequest);
 
         if (accessToken) {
             setMessage("Successfully logged-in!");
-            setAuthContext({ accessToken, refreshToken, expiresIn });
+            setAuthContext({ accessToken, expiresIn });
             navigate(-1);
         } else {
             setMessage("Username or password is wrong.");
