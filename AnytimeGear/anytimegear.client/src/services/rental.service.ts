@@ -11,10 +11,10 @@ class RentalService {
         }
     }
 
-    async fetchAll(userId: number): Promise<IRental[]> {
+    async fetchAll(authToken: string): Promise<IRental[]> {
         try {
-            const response: any = await apiClient.get(`/Rentals?userId=${userId}`)
-            return response.data["$values"]
+            const response: any = await apiClient.get(`/Rentals`, { headers: { Authorization: `Bearer ${authToken}` } });
+            return response.data["$values"];
         } catch (err) {
             console.log(err)
             return []

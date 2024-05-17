@@ -4,18 +4,19 @@ import { createBrowserRouter } from 'react-router-dom'
 import Contact from '../components/Contact.tsx'
 import Home from '../components/Home/Home.tsx'
 import About from '../components/About.tsx'
-import ProductDetails, {
-    productLoader,
-} from '../components/Product/ProductDetails.tsx'
 import SearchResults from '../components/SearchResults/SearchResults.tsx'
 import { SearchContextProvider } from '../context/SearchContext.tsx'
-import AddCategory from '../components/admin/AddCategory.tsx'
-import { CategoriesPage } from '../components/admin/Categories.tsx'
-import AddSubcategory from '../components/admin/AddSubcategory.tsx'
-import { SubcategoriesPage } from '../components/admin/Subcategories.tsx'
-import AddProductPage from '../components/admin/AddProduct.tsx'
-import { ProductsPage } from '../components/admin/Products.tsx'
-import EditProductPage from '../components/admin/EditProduct.tsx'
+import SignInPage from '../components/Identity/SignIn/SignInPage.tsx'
+import AddCategory from '../components/Admin/AddCategory.tsx'
+import { CategoriesPage } from '../components/Admin/Categories.tsx'
+import AddSubcategory from '../components/Admin/AddSubcategory.tsx'
+import { SubcategoriesPage } from '../components/Admin/Subcategories.tsx'
+
+import SignUpPage from '../components/Identity/SignUp/SignUpPage.tsx'
+import ProductDetails from '../components/Product/ProductDetails.tsx'
+import { ProductsPage } from '../components/Admin/Products.tsx'
+import EditProductPage from '../components/Admin/EditProduct.tsx'
+import AddProductPage from '../components/Admin/AddProduct.tsx'
 import Rentals from '../components/Rentals/Rentals.tsx'
 
 export const router = createBrowserRouter([
@@ -45,6 +46,18 @@ export const router = createBrowserRouter([
             {
                 path: 'contact',
                 element: <Contact />,
+            },
+            {
+                path: 'sign-up',
+                element: <SignUpPage/>
+            },
+            {
+                path: 'sign-in',
+                element: <SignInPage/>
+            },
+            {
+                path: 'products/:productId',
+                element: <ProductDetails />,
             },
             {
                 path: 'rentals',

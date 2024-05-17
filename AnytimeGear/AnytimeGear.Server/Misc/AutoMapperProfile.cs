@@ -1,7 +1,6 @@
 ﻿using AnytimeGear.Server.Dtos;
 using AnytimeGear.Server.Models;
 using AutoMapper;
-using System.Collections.Generic;
 
 namespace AnytimeGear.Server.Misc
 {
@@ -12,6 +11,7 @@ namespace AnytimeGear.Server.Misc
             CreateMap<Product, ProductResponseDto>().ReverseMap();
             CreateMap<Subcategory, SubcategoryResponseDto>().ReverseMap();
             CreateMap<Category, CategoryResponseDto>().ReverseMap();
+            CreateMap<RegisterRequestDto, User>();
             //CreateMap<ICollection<Product>, ICollection<ProductResponseDto>>().ReverseMap();
             //CreateMap<ICollection<Category>, ICollection<CategoryResponseDto>>().ReverseMap();
             //CreateMap<ICollection<Subcategory>, ICollection<SubcategoryResponseDto>>().ReverseMap();

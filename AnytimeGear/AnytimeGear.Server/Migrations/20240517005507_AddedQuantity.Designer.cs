@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnytimeGear.Server.Migrations
 {
-    [DbContext(typeof(AnytimeGearServerContext))]
+    [DbContext(typeof(AnytimeGearContext))]
     [Migration("20240517005507_AddedQuantity")]
     partial class AddedQuantity
     {

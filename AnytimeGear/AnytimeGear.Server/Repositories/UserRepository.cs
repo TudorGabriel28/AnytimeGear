@@ -6,7 +6,7 @@ namespace AnytimeGear.Server.Repositories;
 
 public class UserRepository : GenericRepository<User>, IUserRepository
 {
-    public UserRepository(AnytimeGearServerContext context) : base(context)
+    public UserRepository(AnytimeGearContext context) : base(context)
     {
     }
 }

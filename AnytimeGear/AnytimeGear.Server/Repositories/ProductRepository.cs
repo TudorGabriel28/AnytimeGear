@@ -9,7 +9,7 @@ namespace AnytimeGear.Server.Repositories;
 
 public class ProductRepository : GenericRepository<Product>, IProductRepository
 {
-    public ProductRepository(AnytimeGearServerContext dbContext) : base(dbContext)
+    public ProductRepository(AnytimeGearContext dbContext) : base(dbContext)
     {
     }
 

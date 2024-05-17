@@ -4,6 +4,7 @@ using AnytimeGear.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AnytimeGear.Server.Migrations
 {
     [DbContext(typeof(AnytimeGearContext))]
-    partial class AnytimeGearServerContextModelSnapshot : ModelSnapshot
+    [Migration("20240516191225_CreateConfigurations")]
+    partial class CreateConfigurations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,9 +182,6 @@ namespace AnytimeGear.Server.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartPeriod")
                         .HasColumnType("datetime2");
 
@@ -286,6 +286,7 @@ namespace AnytimeGear.Server.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("UpdatedOn")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")

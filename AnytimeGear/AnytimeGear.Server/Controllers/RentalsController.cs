@@ -33,7 +33,7 @@ public class RentalsController : ApiController
             {
                 Id = rental.Id,
                 ProductName = rental.Product.Name,
-                Price = (int)(rental.Product.Price * rental.Quantity * (rental.EndPeriod - rental.StartPeriod).TotalDays),
+                Price = (int)(rental.Product.Price * rental.Quantity * (int)(rental.EndPeriod - rental.StartPeriod).TotalDays),
                 StartDate = rental.StartPeriod.ToString("dd-MM-yyyy"),
                 EndDate = rental.EndPeriod.ToString("dd-MM-yyyy"),
                 Quantity = rental.Quantity,

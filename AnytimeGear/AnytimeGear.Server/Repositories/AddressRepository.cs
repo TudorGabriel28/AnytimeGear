@@ -6,7 +6,7 @@ namespace AnytimeGear.Server.Repositories;
 
 public class AddressRepository : GenericRepository<Address>, IAddressRepository
 {
-    public AddressRepository(AnytimeGearServerContext context) : base(context)
+    public AddressRepository(AnytimeGearContext context) : base(context)
     {
     }
 }
