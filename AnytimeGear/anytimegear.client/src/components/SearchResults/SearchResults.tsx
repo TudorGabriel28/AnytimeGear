@@ -1,4 +1,4 @@
-import { useLoaderData, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLoaderData, useLocation, useNavigate } from 'react-router-dom'
 import { ICategory } from '../../models/category.model'
 import { ISubcategory } from '../../models/subcategory.model'
 import { categoryService } from '../../services/category.service'
@@ -155,7 +155,9 @@ function SearchResults() {
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', mt: 2 }}>
                             {
                                 filteredProducts.map((product) => (
-                                    <ProductPreview key={product.id} product={product} getRentalDurationInDays={getRentalDurationInDays} quantity={quantity!} />
+                                    <Link key={product.id} to={`/products/${product.id}`} style={{ textDecoration: 'none' }} >
+                                        <ProductPreview key={product.id} product={product} getRentalDurationInDays={getRentalDurationInDays} quantity={quantity!} />
+                                    </Link>
                             ))
                             }
                         </Box>

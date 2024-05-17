@@ -8,4 +8,8 @@ public interface IProductRepository : IGenericRepository<Product>
 {
     Task<ICollection<ProductResponseDto>> GetAllAsync(RetrieveProductsRequestDto retrieveProductsRequestDto);
     Task<ICollection<ProductBrandDto>> GetBrandsAsync(RetrieveProductsRequestDto retrieveProductsRequestDto);
+
+    Task<int> GetProductStockAsync(int productId, DateTime startDate, DateTime endDate);
+
+
 }

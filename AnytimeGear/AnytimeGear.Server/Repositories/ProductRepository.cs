@@ -3,6 +3,7 @@ using AnytimeGear.Server.Dtos;
 using AnytimeGear.Server.Models;
 using AnytimeGear.Server.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace AnytimeGear.Server.Repositories;
 
@@ -80,5 +81,11 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
                 Name = g.Key,
                 Count = g.Count()
             }).AsNoTracking().ToListAsync();
+    }
+
+    public async Task<int> GetProductStockAsync(int productId, DateTime startDate, DateTime endDate)
+    {
+        return await dbSet.Where(p => p.Id == productId)
+            .Select(p => p.Capacity - p.Rentals.Where(r => r.StartPeriod <= startDate && r.EndPeriod >= endDate).Count()).FirstOrDefaultAsync();
     }
 }
