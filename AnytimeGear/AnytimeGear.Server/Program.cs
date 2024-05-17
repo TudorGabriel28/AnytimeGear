@@ -45,6 +45,7 @@ builder.Services.AddScoped<IRegisterRequestValidator, RegisterRequestValidator>(
 builder.Services.AddScoped<IUserProvider, UserProvider>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new MappingProfile());

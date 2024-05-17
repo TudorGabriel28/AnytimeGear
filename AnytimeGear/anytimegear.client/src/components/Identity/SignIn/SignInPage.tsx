@@ -4,6 +4,7 @@ import { ILoginRequest } from '../../../models/login-request.model';
 import { Link, TextField } from '@mui/material';
 import '../IdentityPageLayout.css';
 import { useAuth } from '../../../auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface RegisterFormState {
     email: string;
@@ -17,6 +18,7 @@ const SignInPage = () => {
     });
     const [message, setMessage] = useState<string>('');
     const { setAuthContext } = useAuth();
+    const navigate = useNavigate();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -36,6 +38,7 @@ const SignInPage = () => {
         if (accessToken) {
             setMessage("Successfully logged-in!");
             setAuthContext({ accessToken, expiresIn });
+            navigate(-1);
         } else {
             setMessage("Username or password is wrong.");
         }
