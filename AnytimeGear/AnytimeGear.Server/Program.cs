@@ -108,6 +108,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors(CORSCustomAllowedOrigins);
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
