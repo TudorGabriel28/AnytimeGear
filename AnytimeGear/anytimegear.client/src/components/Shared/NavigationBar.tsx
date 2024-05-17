@@ -18,9 +18,10 @@ const pages: INavLink[] = [
     { title: 'Home', route: '/' },
     { title: 'About Us', route: 'about' },
     { title: 'Contact', route: 'contact' },
+    { title: 'Sign-In', route: 'sign-in' },
 ]
 
-const settings = ['Profile', 'Account', 'Logout']
+const settings = ['Profile', 'Account', 'SignIn']
 
 function NavigationBar() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(

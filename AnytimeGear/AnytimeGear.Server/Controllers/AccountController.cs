@@ -4,6 +4,7 @@ using AnytimeGear.Server.Validators;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AnytimeGear.Server.Controllers;
 
@@ -38,9 +39,9 @@ public class AccountController : ApiController
 
         if (result.Succeeded)
         {
-            return Ok(new { Message = "Registration successful" });
+            return Ok(new { Succeeded = true, Message = "Registration successful", Errors = Enumerable.Empty<IdentityError>() });
         }
 
-        return BadRequest(new { result.Errors });
+        return BadRequest(new { Succeeded = false, Message = "Registration failed", Errors = result.Errors }); ;
     }
 }

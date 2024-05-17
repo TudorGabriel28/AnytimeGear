@@ -1,5 +1,3 @@
-import { AxiosResponse } from 'axios'
-import { apiClient } from '../utils/api-client'
 import { IProductList, IProductListPayload } from '../models/product.model'
 import { AxiosResponse } from "axios";
 import { apiClient } from "../utils/api-client";
@@ -14,7 +12,7 @@ class ProductService {
         } catch (err) {
             console.log(err)
             return {
-                items: [], totalCount: 0, minPrice: 0, maxPrice: 0, brands: [], sortKey: 'createdAt', sortOrder: 'asc'
+                items: [], totalCount: 0, minPrice: 0, maxPrice: 0, brands: [], sortKey: 'createdAt', sortOrder: 'asc', checkedBrandNames: []
             }
         }
     }
