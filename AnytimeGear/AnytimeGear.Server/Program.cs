@@ -7,14 +7,14 @@ using AutoMapper;
 using AnytimeGear.Server.Misc;
 using AnytimeGear.Server.Validators;
 using AnytimeGear.Server.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using AnytimeGear.Server.Infrastructure.Abstractions;
 
 var CORSCustomAllowedOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
-var key = Encoding.ASCII.GetBytes(builder?.Configuration["Jwt:Key"]);
+var key = Encoding.UTF8.GetBytes(builder?.Configuration["Jwt:Key"]);
 
 builder.Services.AddDbContext<AnytimeGearContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AnytimeGearContext") ?? throw new InvalidOperationException("Connection string 'AnytimeGearServerContext' not found.")));
@@ -41,6 +41,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICreateCategoryValidator, CreateCategoryValidator>();
 builder.Services.AddScoped<ICreateSubcategoryValidator, CreateSubcategoryValidator>();
 builder.Services.AddScoped<IRegisterRequestValidator, RegisterRequestValidator>();
+builder.Services.AddScoped<IUserProvider, UserProvider>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 var mapperConfig = new MapperConfiguration(mc =>
@@ -52,14 +53,16 @@ builder.Services.AddSingleton(mapper);
 
 builder.Services.AddControllers();
 
-builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication("CustomScheme")
+.AddScheme<ApplicationAuthOptions, ApplicationAuthHandler>("CustomScheme", options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
+    options.SecretKey = builder.Configuration["Jwt:Key"];
+})
+.AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        LogValidationExceptions = true,
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
@@ -69,6 +72,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
+
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<User>(opt =>
 {
