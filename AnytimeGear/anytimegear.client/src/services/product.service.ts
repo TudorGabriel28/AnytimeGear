@@ -1,11 +1,7 @@
-import { AxiosResponse } from 'axios'
 import { apiClient, apiPostClient } from '../utils/api-client'
 import { IProduct, IProductList, IProductListPayload } from '../models/product.model'
-import { IGetProductResponse } from "../models/product.model";
 import { IAddProductPayload } from "../models/product.model";
-import { IProduct, IProductList, IProductListPayload } from '../models/product.model'
 import { AxiosResponse } from "axios";
-import { apiClient } from "../utils/api-client";
 import { Dayjs } from 'dayjs';
 
 class ProductService {
@@ -31,6 +27,15 @@ class ProductService {
             return []
         }
 
+    }
+    async fetchByName(name: string): Promise<IProduct[]> {
+        try {
+            const response: AxiosResponse = await apiClient.get(`/Products/Admin?name=${name}`);
+            return response.data;
+        } catch (err) {
+            console.log(err);
+            return [];
+        }
     }
   
     async fetch(id: number): Promise<IProduct> {

@@ -85,4 +85,9 @@ internal class ProductRepositoryMock : IProductRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<int> GetProductStockAsync(int productId, DateTime startDate, DateTime endDate)
+    {
+        throw new NotImplementedException();
+    }
 }

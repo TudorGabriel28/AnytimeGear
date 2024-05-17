@@ -28,12 +28,26 @@ public class ProductsController : Controller
     [HttpGet]
     [Route("/api/products/admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<ProductResponseDto>> RetrieveProducts()
+    public async Task<ActionResult<ProductResponseDto>> RetrieveProducts([FromQuery] string name = "")
     {
+        var products = string.IsNullOrEmpty(name) ?
+            await _productRepository.GetAllAsync(p => p.Subcategory, p => p.Subcategory.Category) :
+            await _productRepository.GetAllAsync(p => p.Name.Contains(name), p => p.Subcategory, p => p.Subcategory.Category);
 
-        var products = await _productRepository.GetAllAsync(p => p.Subcategory, p => p.Subcategory.Category);
-
-        var response = products.Select(e => new ProductResponseDto { Id = e.Id, Name = e.Name, Brand = e.Brand, Capacity = e.Capacity, Description = e.Description, Model = e.Model, Price = e.Price, ProductPicture = e.ProductPicture, ReplacementValue = e.ReplacementValue, Stock = 0, Subcategory = e.Subcategory});
+        var response = products.Select(e => new ProductResponseDto
+        {
+            Id = e.Id,
+            Name = e.Name,
+            Brand = e.Brand,
+            Capacity = e.Capacity,
+            Description = e.Description,
+            Model = e.Model,
+            Price = e.Price,
+            ProductPicture = e.ProductPicture,
+            ReplacementValue = e.ReplacementValue,
+            Stock = 0,
+            Subcategory = e.Subcategory
+        });
 
         return Ok(response);
     }

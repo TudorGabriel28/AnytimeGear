@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 export function ProductsPage() {
     const [products, setProducts] = useState<IProduct[]>();
+    const [searchTerm, setSearchTerm] = useState<string>("");
 
     useEffect(() => {
         getProducts();
@@ -18,6 +19,7 @@ export function ProductsPage() {
             console.log(error);
         }
     }
+
     async function deleteProduct(id: number) {
         try {
             await productService.delete(id);
@@ -27,14 +29,42 @@ export function ProductsPage() {
         }
     }
 
+    async function searchProducts(name: string) {
+        try {
+            const response = await productService.fetchByName(name);
+            setProducts(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (searchTerm) {
+            searchProducts(searchTerm);
+        } else {
+            getProducts();
+        }
+    };
+
     const contents = products === undefined ? (
         <p><em>Loading...</em></p>
     ) : (
-            <div>
-                <h1 id="tabelLabel">Products</h1>
-                    <Link to="/admin/products/add">
-                        <button>Add Product</button>
-                    </Link>
+        <div>
+            <h1 id="tabelLabel">Products</h1>
+            <Link to="/admin/products/add">
+                <button>Add Product</button>
+            </Link>
+            <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '25%' }}>
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search by name"
+                    style={{ flex: 1, marginRight: '10px', padding: '8px', backgroundColor: '#f0f0f0', color: 'black', boxSizing: 'border-box' }}
+                />
+                <button type="submit" style={{ padding: '8px 16px' }}>Search</button>
+            </form>
             <table className="table table-striped" aria-labelledby="tabelLabel">
                 <thead>
                     <tr>
@@ -49,6 +79,8 @@ export function ProductsPage() {
                         <th>Replacement Value</th>
                         <th>Subcategory</th>
                         <th>Stock</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,7 +108,7 @@ export function ProductsPage() {
                         </tr>
                     )}
                 </tbody>
-                </table>
+            </table>
         </div>
     );
 
