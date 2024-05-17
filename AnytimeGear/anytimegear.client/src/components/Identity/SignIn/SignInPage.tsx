@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { authService } from '../../../services/auth.service';
 import { ILoginRequest } from '../../../models/login-request.model';
-import { TextField } from '@mui/material';
+import { Link, TextField } from '@mui/material';
 import '../IdentityPageLayout.css';
 import { useAuth } from '../../../auth/AuthContext';
 
@@ -70,9 +70,13 @@ const SignInPage = () => {
                         />
                     </div>
                     <button type="submit">Sign-in</button>
-                </form>
+                    </form>
+                    
                 </div>
                 {message && <p>{message}</p>}
+                <div>
+                    <Link href="/sign-up">Register</Link>
+                </div>
             </div>
         </div>
     );
