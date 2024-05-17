@@ -8,6 +8,7 @@ import { Box, Button,  Typography, styled } from "@mui/material";
 import Chip from '@mui/joy/Chip';
 import { rentalService } from "../../services/rental.service";
 import SuccessAlert from "./SuccessAlert";
+import { useAuth } from "../../auth/AuthContext";
 
 const RentButton = styled(Button)(({ theme }) => ({
     backgroundColor: "#35977d",
@@ -43,13 +44,15 @@ function ProductDetails() {
         fetchProductCallback()
     }, [fetchProductCallback])
 
+    const { accessToken } = useAuth()
+
 
     const addRentalAsync = async () => {
-        if (product == undefined || startDate == undefined || endDate == undefined || quantity === null) return
+        if (product == undefined || startDate == undefined || endDate == undefined || quantity === null || accessToken == null) return
 
         const productId = parseInt(id!)
         
-        await rentalService.create({ productId, userId:1, startDate, endDate, quantity })
+        await rentalService.create({ productId, userId: 1, startDate, endDate, quantity }, accessToken)
 
         setOpenAlert(true)
 

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import RentalTable, { RentalTableData } from "./RentalTable";
 import { rentalService } from "../../services/rental.service";
 import { Box, Typography } from "@mui/material";
+import { useAuth } from "../../auth/AuthContext";
 
 function Rentals() {
 
@@ -26,9 +27,12 @@ function Rentals() {
     }
 
     const [rentals, setRentals] = useState<RentalTableData[]>([])
+    const { accessToken } = useAuth()
 
     const fetchRentalsAsync = async () => {
-        const rentals = await rentalService.fetchAll(1);
+        if (accessToken == null) return
+
+        const rentals = await rentalService.fetchAll(accessToken);
         const formattedRentals = rentals.map(r => createData(r.id, r.productName, r.price, r.startDate, r.endDate, r.quantity, r.completed ? 'Completed' : 'Active'))
         console.log(formattedRentals)
 
