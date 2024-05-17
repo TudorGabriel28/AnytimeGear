@@ -22,17 +22,14 @@ class AuthService {
 
     public async login(payload: ILoginRequest): Promise<ILoginResponse> {
 
-        const apiClient = apiPostClient;
-        apiClient.defaults.baseURL = 'https://localhost:7148/';
-
         try {
-            const response = await apiClient.post('/login', payload);
+            const response = await apiPostClient.post('/account/login', payload);
             return response.data as ILoginResponse;
         }
         catch (error: any) {
             console.error(error);
 
-            const errorResponse: ILoginResponse = { accessToken: null, refreshToken: null, expiresIn: 0, tokenType: "Bearer" };
+            const errorResponse: ILoginResponse = { accessToken: null,  expiresIn: 0 };
             return errorResponse;
         }
     }
