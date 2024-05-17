@@ -6,7 +6,7 @@ namespace AnytimeGear.Server.Repositories;
 
 public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
 {
-    public CategoryRepository(AnytimeGearServerContext context) : base(context)
+    public CategoryRepository(AnytimeGearContext context) : base(context)
     {
     }
 }

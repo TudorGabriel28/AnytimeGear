@@ -12,10 +12,10 @@ namespace AnytimeGear.Server.Repositories;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    protected readonly AnytimeGearServerContext dbContext;
+    protected readonly AnytimeGearContext dbContext;
     protected readonly DbSet<T> dbSet;
 
-    public GenericRepository(AnytimeGearServerContext context)
+    public GenericRepository(AnytimeGearContext context)
     {
         dbContext = context;
         dbSet = dbContext.Set<T>();
