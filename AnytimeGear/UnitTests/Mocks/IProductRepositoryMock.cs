@@ -15,7 +15,7 @@ public class IProductRepositoryMock
     public static IProductRepository GetMock()
     {
         List<Product> lstProduct = GenerateTestData();
-        AnytimeGearServerContext dbContextMock = DbContextMock.GetMock<Product, AnytimeGearServerContext>(lstProduct, x => x.Product);
+        AnytimeGearContext dbContextMock = DbContextMock.GetMock<Product, AnytimeGearContext>(lstProduct, x => x.Products);
         return new ProductRepository(dbContextMock);
     }
 
