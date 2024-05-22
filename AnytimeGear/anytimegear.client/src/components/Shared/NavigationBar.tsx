@@ -13,17 +13,37 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import { Link } from 'react-router-dom'
 import { INavLink } from '../../models/navigation-bar.model'
+import { useAuth } from '../../auth/AuthContext'
 
-const pages: INavLink[] = [
-    { title: 'Home', route: '/' },
-    { title: 'About Us', route: 'about' },
-    { title: 'Contact', route: 'contact' },
-    { title: 'Sign-In', route: 'sign-in' },
-]
 
-const settings = ['Profile', 'Account', 'SignIn']
+const settings = ['Profile', 'Account', 'Log out']
 
 function NavigationBar() {
+    const { expiresIn, accessToken } = useAuth()
+    const [pages, setPages] = React.useState<INavLink[]>([])
+
+    React.useEffect(() => {
+        if (!expiresIn || !accessToken) {
+            setPages([
+                { title: 'Home', route: '/' },
+                { title: 'About Us', route: 'about' },
+                { title: 'Contact', route: 'contact' },
+                { title: 'Sign-In', route: 'sign-in' },
+            ])
+        } else {
+            setPages([
+                { title: 'Home', route: '/' },
+                { title: 'My Rentals', route: 'rentals' },
+                { title: 'About Us', route: 'about' },
+                { title: 'Contact', route: 'contact' },
+            ])
+        }
+        console.log('expiresIn', expiresIn)
+        console.log('accessToken', accessToken)
+
+    }, [expiresIn, accessToken])
+
+
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
         null
     )

@@ -17,6 +17,7 @@ import ProductDetails from '../components/Product/ProductDetails.tsx'
 import { ProductsPage } from '../components/Admin/Products.tsx'
 import EditProductPage from '../components/Admin/EditProduct.tsx'
 import AddProductPage from '../components/Admin/AddProduct.tsx'
+import Rentals from '../components/Rentals/Rentals.tsx'
 
 export const router = createBrowserRouter([
     {
@@ -57,6 +58,10 @@ export const router = createBrowserRouter([
             {
                 path: 'products/:productId',
                 element: <ProductDetails />,
+            },
+            {
+                path: 'rentals',
+                element: <Rentals />,
             },
             {
                 path: "admin/categories/add",

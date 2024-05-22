@@ -8,6 +8,7 @@ public class Rental
     public DateTime EndPeriod { get; set; }
 
     public int UserId { get; set; }
+    public int Quantity { get; set; }
     public required User User { get; set; }
 
     public int ProductId { get; set; }

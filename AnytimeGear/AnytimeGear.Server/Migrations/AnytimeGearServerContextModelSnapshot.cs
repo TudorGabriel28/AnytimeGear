@@ -179,6 +179,9 @@ namespace AnytimeGear.Server.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartPeriod")
                         .HasColumnType("datetime2");
 
