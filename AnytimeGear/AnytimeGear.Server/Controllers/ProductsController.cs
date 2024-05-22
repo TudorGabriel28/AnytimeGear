@@ -2,6 +2,7 @@
 using AnytimeGear.Server.Models;
 using AnytimeGear.Server.Repositories;
 using AnytimeGear.Server.Repositories.Interfaces;
+using AnytimeGear.Server.Validators.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,15 @@ public class ProductsController : Controller
     private readonly ICategoryRepository _categoryRepository;
     private readonly ISubcategoryRepository _subCategoryRepository;
     private readonly IMapper _mapper;
+    private readonly IRetrieveProductsRequestValidator _retrieveProductsRequestValidator;
 
-    public ProductsController(IProductRepository productRepository, IMapper mapper, ICategoryRepository categoryRepository, ISubcategoryRepository subcategoryRepository)
+    public ProductsController(IProductRepository productRepository, IMapper mapper, ICategoryRepository categoryRepository, ISubcategoryRepository subcategoryRepository, IRetrieveProductsRequestValidator retrieveProductsRequestValidator)
     {
         _productRepository = productRepository;
         _categoryRepository = categoryRepository;
         _subCategoryRepository = subcategoryRepository;
         _mapper = mapper;
+        _retrieveProductsRequestValidator = retrieveProductsRequestValidator;
     }
 
     [HttpGet]
@@ -57,6 +60,13 @@ public class ProductsController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<ProductListResponseDto>> RetrieveProducts(RetrieveProductsRequestDto request)
     {
+        var validationResult = await _retrieveProductsRequestValidator.ValidateAsync(request);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
         ICollection<ProductResponseDto> products = await _productRepository.GetAllAsync(request);
         ICollection<ProductBrandDto> productBrands = await _productRepository.GetBrandsAsync(request);
 

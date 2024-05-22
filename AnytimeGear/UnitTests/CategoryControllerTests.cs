@@ -2,7 +2,7 @@
 using AnytimeGear.Server.Dtos;
 using AnytimeGear.Server.Models;
 using AnytimeGear.Server.Repositories.Interfaces;
-using AnytimeGear.Server.Validators;
+using AnytimeGear.Server.Validators.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
