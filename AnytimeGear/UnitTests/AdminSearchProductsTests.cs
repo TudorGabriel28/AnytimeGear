@@ -27,7 +27,7 @@ public class AdminSearchProductsTests
             new Product { Name = "Test3", Brand = "Brand3", Model = "Model3", Description = "Description3", Price = 300, Capacity = 3, ReplacementValue = 3000 }
         };
 
-        var controller = new ProductsController(new ProductRepositoryMock(products), new Mapper(mapperConfig), new CategoryRepositoryMock(false), new SubcategoryRepositoryMock(false));
+        var controller = new ProductsController(new ProductRepositoryMock(products), new Mapper(mapperConfig), new CategoryRepositoryMock(false), new SubcategoryRepositoryMock(false), new RetrieveProductsRequestValidator());
         var searchString = "Test";
 
         // Act
