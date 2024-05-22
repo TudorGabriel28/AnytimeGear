@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using AnytimeGear.Server.Infrastructure.Abstractions;
+using AnytimeGear.Server.Validators.Interfaces;
 
 var CORSCustomAllowedOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +43,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICreateCategoryValidator, CreateCategoryValidator>();
 builder.Services.AddScoped<ICreateSubcategoryValidator, CreateSubcategoryValidator>();
 builder.Services.AddScoped<IRegisterRequestValidator, RegisterRequestValidator>();
+builder.Services.AddScoped<IRetrieveProductsRequestValidator, RetrieveProductsRequestValidator>();
 builder.Services.AddScoped<IUserProvider, UserProvider>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));

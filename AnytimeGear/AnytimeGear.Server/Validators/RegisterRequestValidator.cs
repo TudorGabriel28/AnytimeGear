@@ -1,4 +1,5 @@
 ﻿using AnytimeGear.Server.Dtos;
+using AnytimeGear.Server.Validators.Interfaces;
 using System.Text.RegularExpressions;
 
 namespace AnytimeGear.Server.Validators;

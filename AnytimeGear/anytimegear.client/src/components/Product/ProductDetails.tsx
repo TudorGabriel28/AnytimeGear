@@ -45,14 +45,16 @@ function ProductDetails() {
     }, [fetchProductCallback])
 
     const { accessToken } = useAuth()
-
+    const navigate = useNavigate()
 
     const addRentalAsync = async () => {
-        if (product == undefined || startDate == undefined || endDate == undefined || quantity === null || accessToken == null) return
+        if (accessToken == null) navigate('/sign-in')
+
+        if (product == undefined || startDate == undefined || endDate == undefined || quantity === null) return
 
         const productId = parseInt(id!)
         
-        await rentalService.create({ productId, startDate, endDate, quantity }, accessToken)
+        await rentalService.create({ productId, startDate, endDate, quantity }, accessToken!)
 
         setOpenAlert(true)
 
