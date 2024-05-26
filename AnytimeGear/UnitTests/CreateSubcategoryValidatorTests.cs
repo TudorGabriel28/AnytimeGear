@@ -8,7 +8,7 @@ namespace UnitTests;
 public class CreateSubcategoryValidatorTests
 {
     [TestMethod]
-    public async Task Given_ValidSubcategory_When_ValidateAsync_Returns_IsValid()
+    public async Task ValidateAsync_With_ValidSubcategory_Returns_IsValid()
     {
         // Arrange
         var validator = new CreateSubcategoryValidator(new SubcategoryRepositoryMock(false));
@@ -24,7 +24,7 @@ public class CreateSubcategoryValidatorTests
     }
 
     [TestMethod]
-    public async Task Given_SubcategoryNameBlank_When_ValidateAsync_Returns_IsNotValid()
+    public async Task ValidateAsync_With_SubcategoryNameBlank_Returns_IsNotValid()
     {
         // Arrange
         var validator = new CreateSubcategoryValidator(new SubcategoryRepositoryMock(false));
@@ -46,7 +46,7 @@ public class CreateSubcategoryValidatorTests
     }
     
     [TestMethod]
-    public async Task Given_DuplicatedSubcategory_When_ValidateAsync_Returns_IsNotValid()
+    public async Task ValidateAsync_With_DuplicatedSubcategory_Returns_IsNotValid()
     {
         // Arrange
         var validator = new CreateSubcategoryValidator(new SubcategoryRepositoryMock(true));
@@ -67,7 +67,7 @@ public class CreateSubcategoryValidatorTests
     }
 
     [TestMethod]
-    public async Task Given_SubcategoryNameShorterThanMin_When_ValidateAsync_Returns_IsNotValid()
+    public async Task ValidateAsync_With_SubcategoryNameShorterThanMin_Returns_IsNotValid()
     {
         // Arrange
         var validator = new CreateSubcategoryValidator(new SubcategoryRepositoryMock(false));
@@ -88,7 +88,7 @@ public class CreateSubcategoryValidatorTests
     }
 
     [TestMethod]
-    public async Task Given_SubcategoryNameLongerThanMax_When_ValidateAsync_Returns_IsNotValid()
+    public async Task ValidateAsync_With_SubcategoryNameLongerThanMax_Returns_IsNotValid()
     {
         // Arrange
         var validator = new CreateSubcategoryValidator(new SubcategoryRepositoryMock(false));

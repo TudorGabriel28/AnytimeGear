@@ -8,7 +8,7 @@ namespace UnitTests;
 public class CreateCategoryValidatorTests
 {
     [TestMethod]
-    public async Task Given_ValidCategory_When_ValidateAsync_Returns_IsValid()
+    public async Task ValidateAsync_With_ValidCategory_Returns_IsValid()
     {
         // Arrange
         var validator = new CreateCategoryValidator(new CategoryRepositoryMock(false));
@@ -22,7 +22,7 @@ public class CreateCategoryValidatorTests
     }
 
     [TestMethod]
-    public async Task Given_CategoryNameBlank_When_ValidateAsync_Returns_IsNotValid()
+    public async Task ValidateAsync_With_CategoryNameBlank_Returns_IsNotValid()
     {
         // Arrange
         var validator = new CreateCategoryValidator(new CategoryRepositoryMock(false));
@@ -39,7 +39,7 @@ public class CreateCategoryValidatorTests
     }
     
     [TestMethod]
-    public async Task Given_DuplicatedCategory_When_ValidateAsync_Returns_IsNotValid()
+    public async Task ValidateAsync_With_DuplicatedCategory_Returns_IsNotValid()
     {
         // Arrange
         var validator = new CreateCategoryValidator(new CategoryRepositoryMock(true));
@@ -55,7 +55,7 @@ public class CreateCategoryValidatorTests
     }
     //ValidateAsync_With_NameShorterThanMinLength_Returns_IsInvalid
     [TestMethod]
-    public async Task Given_CategoryNameShorterThanMin_When_ValidateAsync_Returns_IsNotValid()
+    public async Task ValidateAsync_With_CategoryNameShorterThanMin_Returns_IsNotValid()
     {
         // Arrange
         var validator = new CreateCategoryValidator(new CategoryRepositoryMock(false));
@@ -71,7 +71,7 @@ public class CreateCategoryValidatorTests
     }
 
     [TestMethod]
-    public async Task Given_CategoryNameLongerThanMax_When_ValidateAsync_Returns_IsNotValid()
+    public async Task ValidateAsync_With_CategoryNameLongerThanMax_Returns_IsNotValid()
     {
         // Arrange
         var validator = new CreateCategoryValidator(new CategoryRepositoryMock(false));
