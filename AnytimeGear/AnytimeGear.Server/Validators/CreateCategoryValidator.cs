@@ -1,6 +1,7 @@
 ﻿using AnytimeGear.Server.Data;
 using AnytimeGear.Server.Models;
 using AnytimeGear.Server.Repositories.Interfaces;
+using AnytimeGear.Server.Validators.Interfaces;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace AnytimeGear.Server.Validators;

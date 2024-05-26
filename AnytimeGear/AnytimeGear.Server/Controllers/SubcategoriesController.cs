@@ -2,7 +2,7 @@
 using AnytimeGear.Server.Dtos;
 using AnytimeGear.Server.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using AnytimeGear.Server.Validators;
+using AnytimeGear.Server.Validators.Interfaces;
 
 namespace AnytimeGear.Server.Controllers;
 

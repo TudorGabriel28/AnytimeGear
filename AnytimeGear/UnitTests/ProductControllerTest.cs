@@ -2,6 +2,8 @@
 using AnytimeGear.Server.Dtos;
 using AnytimeGear.Server.Models;
 using AnytimeGear.Server.Repositories.Interfaces;
+using AnytimeGear.Server.Validators;
+using AnytimeGear.Server.Validators.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -24,6 +26,7 @@ public class ProductsControllerTests
         var mockMapper = new Mock<IMapper>();
         var mockCategoryRepository = new Mock<ICategoryRepository>();
         var mockSubcategoryRepository = new Mock<ISubcategoryRepository>();
+        var mockRetrieveProductsRequestValidator = new Mock<IRetrieveProductsRequestValidator>();
 
         var mockRequest = new RetrieveProductsRequestDto
         {
@@ -53,8 +56,9 @@ public class ProductsControllerTests
 
         mockProductRepository.Setup(repo => repo.GetAllAsync(mockRequest)).ReturnsAsync(mockProducts);
         mockProductRepository.Setup(repo => repo.GetBrandsAsync(mockRequest)).ReturnsAsync(mockProductBrands);
+        mockRetrieveProductsRequestValidator.Setup(validator => validator.ValidateAsync(mockRequest)).ReturnsAsync(new ValidationResult());
 
-        var controller = new ProductsController(mockProductRepository.Object, mockMapper.Object, mockCategoryRepository.Object, mockSubcategoryRepository.Object);
+        var controller = new ProductsController(mockProductRepository.Object, mockMapper.Object, mockCategoryRepository.Object, mockSubcategoryRepository.Object, mockRetrieveProductsRequestValidator.Object);
 
         // Act
         var result = await controller.RetrieveProducts(mockRequest);

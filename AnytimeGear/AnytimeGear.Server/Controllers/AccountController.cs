@@ -1,6 +1,6 @@
 ﻿using AnytimeGear.Server.Dtos;
 using AnytimeGear.Server.Models;
-using AnytimeGear.Server.Validators;
+using AnytimeGear.Server.Validators.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
