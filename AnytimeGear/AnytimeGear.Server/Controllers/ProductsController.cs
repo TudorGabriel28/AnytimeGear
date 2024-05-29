@@ -1,9 +1,11 @@
 ﻿using AnytimeGear.Server.Dtos;
+using AnytimeGear.Server.Infrastructure.Abstractions;
 using AnytimeGear.Server.Models;
 using AnytimeGear.Server.Repositories;
 using AnytimeGear.Server.Repositories.Interfaces;
 using AnytimeGear.Server.Validators.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
@@ -29,7 +31,7 @@ public class ProductsController : Controller
     }
 
     [HttpGet]
-    [Route("/api/products/admin")]
+    [Route("/api/admin/products")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<ProductResponseDto>> RetrieveProducts([FromQuery] string name = "")
     {

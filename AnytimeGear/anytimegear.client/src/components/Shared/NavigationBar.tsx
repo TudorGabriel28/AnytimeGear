@@ -14,12 +14,13 @@ import MenuItem from '@mui/material/MenuItem'
 import { Link } from 'react-router-dom'
 import { INavLink } from '../../models/navigation-bar.model'
 import { useAuth } from '../../auth/AuthContext'
+import { removeAuthFromSessionStorage } from '../../utils/logout'
 
 
-const settings = ['Profile', 'Account', 'Log out']
+const settings = ['Log out']
 
 function NavigationBar() {
-    const { expiresIn, accessToken } = useAuth()
+    const { expiresIn, accessToken, setAuthContext } = useAuth()
     const [pages, setPages] = React.useState<INavLink[]>([])
 
     React.useEffect(() => {
@@ -38,8 +39,6 @@ function NavigationBar() {
                 { title: 'Contact', route: 'contact' },
             ])
         }
-        console.log('expiresIn', expiresIn)
-        console.log('accessToken', accessToken)
 
     }, [expiresIn, accessToken])
 
@@ -64,6 +63,14 @@ function NavigationBar() {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null)
+    }
+
+
+    const logOutUser = () => {
+        handleCloseUserMenu()
+        removeAuthFromSessionStorage()
+        setAuthContext({ accessToken: null, expiresIn: null })
+        window.location.href = '/sign-in'
     }
 
     return (
@@ -220,7 +227,7 @@ function NavigationBar() {
                                     key={setting}
                                     onClick={handleCloseUserMenu}
                                 >
-                                    <Typography textAlign="center">
+                                    <Typography textAlign="center" onClick={logOutUser}>
                                         {setting}
                                     </Typography>
                                 </MenuItem>

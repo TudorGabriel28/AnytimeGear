@@ -6,12 +6,15 @@ import { router } from './utils/router'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { AuthProvider } from './auth/AuthContext'
+import { SearchContextProvider } from './context/SearchContext'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 
     <LocalizationProvider dateAdapter={AdapterDayjs}>
         <AuthProvider>
-            <RouterProvider router={router} />
+            <SearchContextProvider>
+                <RouterProvider router={router} />
+            </SearchContextProvider>
         </AuthProvider>
     </LocalizationProvider>
 

@@ -26,10 +26,15 @@ function ProductDetails() {
     const [loading, setLoading] = useState(true);
     const [totalPrice, setTotalPrice] = useState(0)
     const [openAlert, setOpenAlert] = useState(false);
-    
+    const { accessToken } = useAuth()
+    const navigate = useNavigate()
+
     const fetchProductAsync = async () => {
         setLoading(true)
-        if (id == undefined || startDate == undefined || endDate == undefined) return
+        if (id == undefined || startDate == undefined || endDate == undefined) {
+            navigate("/")
+            return
+        }
 
         const productId = parseInt(id)
         const product = await productService.fetchProduct(productId, startDate, endDate)
@@ -44,8 +49,7 @@ function ProductDetails() {
         fetchProductCallback()
     }, [fetchProductCallback])
 
-    const { accessToken } = useAuth()
-    const navigate = useNavigate()
+    
 
     const addRentalAsync = async () => {
         if (accessToken == null) navigate('/sign-in')
@@ -60,8 +64,8 @@ function ProductDetails() {
 
         setTimeout(() => {
             setOpenAlert(false)
-            
-        }, 5000)
+            navigate(-1)
+        }, 2000)
     }
 
 
@@ -83,15 +87,18 @@ function ProductDetails() {
                         </Skeleton>
                     </AspectRatio>
                     <Box>
-                        <Typography variant="h3" gutterBottom>
+                        <Typography variant="h3" gutterBottom sx={{ width: '28ch'}}>
                             {`${product?.name} ${product?.model}`}
                         </Typography>
                         <Typography variant="h4" gutterBottom sx={{mb:5} }>
                             {product?.brand}
                         </Typography>
-
                         {
-                            product?.stock && product.stock < 5 &&
+                            product?.stock && product.stock <= 0 &&
+                            <Typography variant="subtitle1" sx={{ color: 'red' }}>(Out of stock)</Typography>
+                        }
+                        {
+                            product?.stock && product.stock < 5 && product.stock > 0 &&
                             <Typography variant="subtitle1" sx={{ color: 'red' }}>(Only <b>{product.stock}</b> left in stock!)</Typography>
                         }
                         {
@@ -138,6 +145,7 @@ function ProductDetails() {
                                         borderRadius: 8,
                                         py: 1.5,
                                     }}
+                                    disabled={product?.stock && product.stock <= 0 ? true : false}
                                 >
                                     Rent now
                                 </RentButton>

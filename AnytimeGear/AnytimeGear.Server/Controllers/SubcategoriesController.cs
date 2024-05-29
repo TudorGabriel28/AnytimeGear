@@ -3,10 +3,12 @@ using AnytimeGear.Server.Dtos;
 using AnytimeGear.Server.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using AnytimeGear.Server.Validators.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AnytimeGear.Server.Controllers;
 
-public class SubcategoriesController : ApiController
+[ApiController]
+public class SubcategoriesController : Controller
 {
     private readonly ISubcategoryRepository _subcategoryRepository;
     private readonly ICategoryRepository _categoryRepository;
@@ -20,7 +22,7 @@ public class SubcategoriesController : ApiController
     }
 
     [HttpGet]
-    [Route("")]
+    [Route("/api/subcategories")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<CustomListResponseDto<SubcategoryResponseDto>>> RetrieveSubcategories()
@@ -47,7 +49,8 @@ public class SubcategoriesController : ApiController
     }
 
     [HttpGet]
-    [Route("{id:int}")]
+    [Route("/api/admin/subcategories/{id:int}")]
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<SubcategoryResponseDto>> RetrieveSubcategoryById([FromRoute] int id)
@@ -70,7 +73,8 @@ public class SubcategoriesController : ApiController
     }
 
     [HttpPost]
-    [Route("")]
+    [Route("/api/admin/subcategories")]
+
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> CreateSubcategory([FromBody] UpsertSubcategoryRequestDto requestDto)
@@ -108,7 +112,8 @@ public class SubcategoriesController : ApiController
     }
 
     [HttpPut]
-    [Route("{id:int}")]
+    [Route("/api/admin/subcategories/{id:int}")]
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -146,7 +151,8 @@ public class SubcategoriesController : ApiController
     }
 
     [HttpDelete]
-    [Route("{id:int}")]
+    [Route("/api/admin/subcategories/{id:int}")]
+
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> DeleteSubcategory([FromRoute] int id)
     {

@@ -36,6 +36,7 @@ function SearchResults() {
     const [checkedBrandNames, setCheckedBrandNames] = useState<string[]>([]);
     const [brands, setBrands] = useState<IProductBrand[]>([]);
     const [clearFiltersPressed, setClearFiltersPressed] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
 
     const { getRentalDurationInDays, quantity, startDate, endDate, subcategory, category } = useContext(SearchContext)
@@ -80,6 +81,19 @@ function SearchResults() {
 
     const fetchProductsAsync = async () => {
         const productListResponse = await productService.fetchAll({ categoryId: category.id, subcategoryId: subcategory.id, startDate, endDate, quantity, sortKey: selectedSortOption.key, sortOrder: selectedSortOption.order, checkedBrandNames });
+
+        if (productListResponse.errors) {
+
+            const objString = Object.entries(productListResponse.errors)
+                .map(([key, value]) => `${key}: ${value[0]}`)
+                .join(', ');
+
+            // @ts-ignore
+            setErrorMessage(objString);
+        } else {
+            setErrorMessage(null);
+        }
+
         if (selectedMin < productListResponse.minPrice && selectedMax > productListResponse.maxPrice) {
             setSelectedMin(productListResponse.minPrice);
             setSelectedMax(productListResponse.maxPrice);
@@ -113,6 +127,7 @@ function SearchResults() {
         if (clearFiltersPressed) {
             setSelectedMin(minPrice)
             setSelectedMax(maxPrice)
+            setClearFiltersPressed(false)
         }
         applyPriceFilterOnProducts();
     }, [selectedMin, selectedMax, products])
@@ -148,6 +163,7 @@ function SearchResults() {
                         >
                             <Typography variant="h5" sx={{ fontWeight: 800 }}>
                                 {filteredProducts.length} products available
+                                {errorMessage && <span style={{ color: 'red', fontSize: 'medium', marginLeft: '1em' }}>{errorMessage}</span>}
                             </Typography>
                             <Sort handleChange={handleSortChange} selectedSortOption={selectedSortOption} />
                         </Box>

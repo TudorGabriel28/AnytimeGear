@@ -35,8 +35,7 @@ function Rentals() {
         if (accessToken == null) navigate('/sign-in')
 
         const rentals = await rentalService.fetchAll(accessToken!);
-        const formattedRentals = rentals.map(r => createData(r.id, r.productName, r.price, r.startDate, r.endDate, r.quantity, r.completed ? 'Completed' : 'Active'))
-        console.log(formattedRentals)
+        const formattedRentals = rentals.map(r => createData(r.id, r.productName, r.price, r.startDate, r.endDate, r.quantity, generateStatus(r.completed, r.endDate)))
 
         setRentals(formattedRentals)
 
@@ -49,6 +48,25 @@ function Rentals() {
     }, [fetchRentalsCallback])
 
 
+    function generateStatus(completed: boolean, endDate: string): string {
+
+        let message = ''
+        
+        const today = new Date()
+        const [day, month, year] = endDate.split('-')
+        const end = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+        
+
+        if (end < today && !completed) {
+            message = 'Overdue';
+        } else if (end < today && completed) {
+            message = 'Completed'
+        } else if (end >= today && !completed) {
+            message = 'Active'
+        }
+
+        return message
+    }
 
   return (
       <>
@@ -68,3 +86,4 @@ function Rentals() {
 }
 
 export default Rentals;
+

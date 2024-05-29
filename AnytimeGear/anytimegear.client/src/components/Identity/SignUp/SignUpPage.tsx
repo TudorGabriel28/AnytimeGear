@@ -3,6 +3,7 @@ import { authService } from '../../../services/auth.service';
 import { IRegisterRequest } from '../../../models/register-request.model';
 import { TextField } from '@mui/material';
 import '../IdentityPageLayout.css';
+import { useNavigate } from 'react-router-dom';
 
 interface RegisterFormState {
     email: string;
@@ -35,6 +36,8 @@ const SignUpPage = () => {
         });
     };
 
+    const navigate = useNavigate();
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -51,6 +54,7 @@ const SignUpPage = () => {
         } else {
             setMessage('Registration failed. Please try again.');
         }
+        navigate("/")
     };
 
     return (

@@ -21,14 +21,13 @@ const AddToCartBtn = styled(Button)(({ theme }) => ({
 
 function ProductPreview({ product, getRentalDurationInDays, quantity }: { product: IProduct, getRentalDurationInDays: Function, quantity: number }) {
 
-
+    console.log(product)
     return (
         <Card sx={{ width: 200, maxWidth: '100%', m: 2 }}>
             <CardOverflow>
                 <AspectRatio maxHeight={200} ratio="3/4">
-                  <img
-                        src="https://contents.mediadecathlon.com/p170335/k$51e89d1e55b6e55f0d3468a508caba39/sq/racheta-tenis-tr100-negru-adulti.jpg?format=auto&f=1800x1800"
-                        srcSet="https://contents.mediadecathlon.com/p170335/k$51e89d1e55b6e55f0d3468a508caba39/sq/racheta-tenis-tr100-negru-adulti.jpg?format=auto&f=1800x1800 2x"
+                    <img
+                      src={product.productPicture}
                       loading="lazy"
                       alt=""
                   />
@@ -55,8 +54,8 @@ function ProductPreview({ product, getRentalDurationInDays, quantity }: { produc
               </Typography>
                 <Typography level="body-sm">
                     {
-                        product.stock < 5 &&
-                        <>(Only <b>{product.stock }</b> left in stock!)</>
+                        product.stock < 5 ?
+                            <>(Only <b>{product.stock}</b> left in stock!)</> : <br></br>
                     }
                   
               </Typography>

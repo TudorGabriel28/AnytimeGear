@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -74,20 +75,24 @@ public class AccountController : ApiController
             return BadRequest("Username or password is not correct.");
         }
 
-        var token = GenerateJwtToken(user);
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var token = GenerateJwtToken(user, roles);
 
         return Ok(new { AccessToken = token, ExpiresIn = 3600 });
     }
 
-    private string GenerateJwtToken(User user)
+    private string GenerateJwtToken(User user, IList<string> roles)
     {
+
         var claims = new Claim[]
         {
             new (JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new (ClaimTypes.NameIdentifier, user.Id.ToString()),
             new (ClaimTypes.Name, user.UserName),
-            new (ClaimTypes.Email, user.Email)
+            new (ClaimTypes.Email, user.Email),
+            new (ClaimTypes.Role, roles.FirstOrDefault("user"))
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

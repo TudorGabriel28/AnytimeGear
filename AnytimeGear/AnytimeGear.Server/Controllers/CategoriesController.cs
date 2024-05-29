@@ -3,11 +3,13 @@ using AnytimeGear.Server.Dtos;
 using AnytimeGear.Server.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using AnytimeGear.Server.Validators.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace AnytimeGear.Server.Controllers;
 
-public class CategoriesController : ApiController
+[ApiController]
+public class CategoriesController : Controller
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly ICreateCategoryValidator _createCategoryValidator; 
@@ -20,7 +22,7 @@ public class CategoriesController : ApiController
     }
 
     [HttpGet]
-    [Route("")]
+    [Route("/api/categories")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<CustomListResponseDto<CategoryResponseDto>>> RetrieveCategories()
     {
@@ -32,7 +34,8 @@ public class CategoriesController : ApiController
     }
 
     [HttpGet]
-    [Route("{id:int}")]
+    [Route("/api/admin/categories/{id:int}")]
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<CategoryResponseDto>> RetrieveCategoryById([FromRoute] int id)
@@ -54,7 +57,8 @@ public class CategoriesController : ApiController
     }
 
     [HttpPost]
-    [Route("")]
+    [Route("/api/admin/categories")]
+
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> CreateCategory([FromBody] UpsertCategoryRequestDto requestDto)
@@ -84,7 +88,8 @@ public class CategoriesController : ApiController
     }
 
     [HttpPut]
-    [Route("{id:int}")]
+    [Route("/api/admin/categories/{id:int}")]
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -118,7 +123,8 @@ public class CategoriesController : ApiController
     }
 
     [HttpDelete]
-    [Route("{id:int}")]
+    [Route("/api/admin/categories/{id:int}")]
+
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> DeleteCategory([FromRoute] int id)
     {

@@ -38,18 +38,21 @@ export const SearchContext = React.createContext<ISearchContext>({
 });
 
 // Create a provider component
-export const SearchContextProvider: React.FC = ({ children }: any) => {
+export const SearchContextProvider = ({ children }) => {
     const [subcategory, setSubcategory] = useState<ISubcategory>(initialSubcategory);
     const [category, setCategory] = useState<ICategory>(initialCategory);
     const [startDate, setStartDate] = useState<Dayjs | null>(null);
     const [endDate, setEndDate] = useState<Dayjs | null>(null);
     const [quantity, setQuantity] = useState<number | null>(null);
 
-    const getRentalDurationInDays = () => startDate && endDate ? endDate.diff(startDate, 'days') : 0;
+    const getRentalDurationInDays = () => {
+        const diff = startDate && endDate ? endDate.diff(startDate, 'days') : -1;
+        return diff > 0 ? diff : 1;
+    }
 
     return (
         <SearchContext.Provider value={{ category, subcategory, startDate, endDate, quantity, setCategory, setSubcategory, setStartDate, setEndDate, setQuantity, getRentalDurationInDays }}>
-            <Outlet />
+            {children }
         </SearchContext.Provider>
     );
 };
