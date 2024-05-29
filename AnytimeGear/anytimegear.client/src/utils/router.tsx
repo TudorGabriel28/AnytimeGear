@@ -18,6 +18,7 @@ import { ProductsPage } from '../components/Admin/Products.tsx'
 import EditProductPage from '../components/Admin/EditProduct.tsx'
 import AddProductPage from '../components/Admin/AddProduct.tsx'
 import Rentals from '../components/Rentals/Rentals.tsx'
+import AdminGuard from '../components/Admin/AdminGuard.tsx'
 
 export const router = createBrowserRouter([
     {
@@ -25,19 +26,14 @@ export const router = createBrowserRouter([
         element: <App />,
         errorElement: <Error />,
         children: [
+            { index: true, element: <Home /> },
             {
-                element: <SearchContextProvider />,
-                children: [
-                    { index: true, element: <Home /> },
-                    {
-                        path: 'search',
-                        element: <SearchResults />,
-                    },
-                    {
-                        path: 'products/:id',
-                        element: <ProductDetails />,
-                    },
-                ]
+                path: 'search',
+                element: <SearchResults />,
+            },
+            {
+                path: 'products/:id',
+                element: <ProductDetails />,
             },
             {
                 path: 'about',
@@ -65,31 +61,31 @@ export const router = createBrowserRouter([
             },
             {
                 path: "admin/categories/add",
-                element: <AddCategory />
+                element: <AdminGuard><AddCategory/></AdminGuard>
             },
             {
                 path: "admin/categories",
-                element: <CategoriesPage />
+                element: <AdminGuard><CategoriesPage /></AdminGuard>
             },
             {
                 path: "admin/subcategories/add",
-                element: <AddSubcategory />
+                element: <AdminGuard><AddSubcategory /></AdminGuard>
             },
             {
                 path: "admin/subcategories",
-                element: <SubcategoriesPage />
+                element: <AdminGuard><SubcategoriesPage /></AdminGuard>
             },
             {
                 path: "admin/products/add",
-                element: <AddProductPage />
+                element: <AdminGuard><AddProductPage /></AdminGuard>
             },
             {
                 path: "admin/products",
-                element: <ProductsPage />
+                element: <AdminGuard><ProductsPage /></AdminGuard>
             },
             {
                 path: `admin/products/:id`,
-                element: <EditProductPage />,
+                element: <AdminGuard><EditProductPage /></AdminGuard>,
             },
         ],
     },

@@ -89,6 +89,10 @@ function Search({ onSubmit }: {onSubmit: Function}) {
         if (submitPressed && startDate === localStartDate && endDate === localEndDate && quantity === localQuantity) {
             onSubmit();
             setSubmitPressed(false);
+            setQuantityError(initialErrorState);
+            setSubcategoryError(initialErrorState);
+            setStartDateError(initialErrorState);
+            setEndDateError(initialErrorState);
         }
     }, [startDate, endDate, quantity, submitPressed]);
 
@@ -186,7 +190,7 @@ function Search({ onSubmit }: {onSubmit: Function}) {
                             value={localQuantity == null ? '' : localQuantity}
                             type="number"
                             sx={{ mr: 2 }}
-                            InputProps={{ sx: { borderRadius: 10 } }}
+                            InputProps={{ sx: { borderRadius: 10 }, inputProps: { min: 1 } }}
                             onChange={(e) =>
                                 setLocalQuantity(e.target.value as unknown as number)
                             }

@@ -26,7 +26,7 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
         IQueryable<Product> query = dbSet.Include(p => p.Subcategory.Category)
             .Include(p => p.Rentals)
             .Where(p => p.Subcategory.Id == subcategoryId)
-            .Where(p => p.Capacity >= quantity + p.Rentals.Count(r => r.StartPeriod >= startDate && r.EndPeriod <= endDate))
+            .Where(p => p.Capacity >= quantity + p.Rentals.Where(r => r.StartPeriod <= endDate && r.EndPeriod >= startDate).Sum(r => r.Quantity))
             .AsNoTracking();
 
         switch (sortKey)
@@ -60,7 +60,8 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
             Capacity = p.Capacity,
             ReplacementValue = p.ReplacementValue,
             Subcategory = p.Subcategory,
-            Stock = p.Capacity - p.Rentals.Count(r => r.StartPeriod >= startDate && r.EndPeriod <= endDate)
+            ProductPicture = p.ProductPicture,
+            Stock = p.Capacity - p.Rentals.Where(r => r.StartPeriod <= endDate && r.EndPeriod >= startDate).Sum(r => r.Quantity)
         }).ToListAsync();
     }
 
@@ -86,6 +87,6 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
     public async Task<int> GetProductStockAsync(int productId, DateTime startDate, DateTime endDate)
     {
         return await dbSet.Where(p => p.Id == productId)
-            .Select(p => p.Capacity - p.Rentals.Where(r => r.StartPeriod <= startDate && r.EndPeriod >= endDate).Count()).FirstOrDefaultAsync();
+            .Select(p => p.Capacity - p.Rentals.Where(r => r.StartPeriod <= endDate && r.EndPeriod >= startDate).Sum(r => r.Quantity)).FirstOrDefaultAsync();
     }
 }

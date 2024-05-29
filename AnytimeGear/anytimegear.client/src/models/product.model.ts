@@ -23,7 +23,8 @@ export interface IProductList {
     brands: IProductBrand[],
     sortKey: SortKey,
     sortOrder: SortOrder,
-    checkedBrandNames: string[]
+    checkedBrandNames: string[],
+    errors?: Object
 }
 
 export interface IProductBrand {

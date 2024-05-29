@@ -10,16 +10,16 @@ class ProductService {
             const response: AxiosResponse = await apiClient.post('/Products/', payload)
 
             return response.data
-        } catch (err) {
+        } catch (err: any) {
             console.log(err)
             return {
-                items: [], totalCount: 0, minPrice: 0, maxPrice: 0, brands: [], sortKey: 'createdAt', sortOrder: 'asc', checkedBrandNames: []
+                items: [], totalCount: 0, minPrice: 0, maxPrice: 0, brands: [], sortKey: 'createdAt', sortOrder: 'asc', checkedBrandNames: [], errors: err.response.status === 500 ? null : err.response.data
             }
         }
     }
     async fetchAllAdmin(): Promise<IProduct[]> {
         try {
-            const response: AxiosResponse = await apiClient.get('/Products/Admin')
+            const response: AxiosResponse = await apiClient.get('/admin/products')
 
             return response.data
         } catch (err) {
@@ -30,7 +30,7 @@ class ProductService {
     }
     async fetchByName(name: string): Promise<IProduct[]> {
         try {
-            const response: AxiosResponse = await apiClient.get(`/Products/Admin?name=${name}`);
+            const response: AxiosResponse = await apiClient.get(`/Admin/Products?name=${name}`);
             return response.data;
         } catch (err) {
             console.log(err);

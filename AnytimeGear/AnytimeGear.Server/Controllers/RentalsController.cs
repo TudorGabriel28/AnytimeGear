@@ -81,7 +81,8 @@ public class RentalsController : ApiController
             User = user,
             StartPeriod = requestDto.StartDate,
             EndPeriod = requestDto.EndDate,
-            Completed = false
+            Completed = false,
+            Quantity = requestDto.Quantity
         };
 
         await _rentalRepository.AddAsync(rental);
