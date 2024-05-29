@@ -1,7 +1,6 @@
 import App from '../App.tsx'
 import Error from '../components/Error.tsx'
 import { createBrowserRouter } from 'react-router-dom'
-import Contact from '../components/Contact.tsx'
 import Home from '../components/Home/Home.tsx'
 import About from '../components/About.tsx'
 import SearchResults from '../components/SearchResults/SearchResults.tsx'
@@ -38,10 +37,6 @@ export const router = createBrowserRouter([
             {
                 path: 'about',
                 element: <About />,
-            },
-            {
-                path: 'contact',
-                element: <Contact />,
             },
             {
                 path: 'sign-up',

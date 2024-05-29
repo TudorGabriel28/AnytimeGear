@@ -8,12 +8,14 @@ import Menu from '@mui/material/Menu'
 import MenuIcon from '@mui/icons-material/Menu'
 import Container from '@mui/material/Container'
 import Avatar from '@mui/material/Avatar'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import { Link } from 'react-router-dom'
 import { INavLink } from '../../models/navigation-bar.model'
 import { useAuth } from '../../auth/AuthContext'
+import logo from '/public/logo_wide.png';
 import { removeAuthFromSessionStorage } from '../../utils/logout'
 
 
@@ -28,7 +30,6 @@ function NavigationBar() {
             setPages([
                 { title: 'Home', route: '/' },
                 { title: 'About Us', route: 'about' },
-                { title: 'Contact', route: 'contact' },
                 { title: 'Sign-In', route: 'sign-in' },
             ])
         } else {
@@ -36,19 +37,13 @@ function NavigationBar() {
                 { title: 'Home', route: '/' },
                 { title: 'My Rentals', route: 'rentals' },
                 { title: 'About Us', route: 'about' },
-                { title: 'Contact', route: 'contact' },
             ])
         }
 
     }, [expiresIn, accessToken])
 
-
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-        null
-    )
-    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-        null
-    )
+    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
+    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget)
@@ -77,21 +72,23 @@ function NavigationBar() {
         <AppBar variant="plain" position="static" sx={{ backgroundColor: 'white' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <Typography
-                        variant="h6"
-                        noWrap
+                    <Box
                         component="a"
-                        href="#app-bar-with-responsive-menu"
                         sx={{
                             mr: 2,
                             display: { xs: 'none', md: 'flex' },
-                            fontWeight: 700,
-                            color: 'black',
-                            textDecoration: 'none',
                         }}
                     >
-                        AnytimeGear
-                    </Typography>
+                        <Link
+                            to={"/"}
+                            style={{
+                                textDecoration: 'none',
+                                color: 'inherit',
+                            }}
+                        >
+                            <img src={logo} alt="AnytimeGear" style={{ height: '30px' }} />
+                        </Link>
+                    </Box>
 
                     <Box
                         sx={{
@@ -171,26 +168,26 @@ function NavigationBar() {
                         }}
                     >
                         {pages.map((page) => (
-                            <Button
+                            <Link
                                 key={page.route}
-                                onClick={handleCloseNavMenu}
-                                sx={{
-                                    my: 2,
-                                    mx: 1,
-                                    color: 'black',
-                                    display: 'block',
+                                to={page.route}
+                                style={{
+                                    textDecoration: 'none',
+                                    color: 'inherit',
                                 }}
                             >
-                                <Link
-                                    to={page.route}
-                                    style={{
-                                        textDecoration: 'none',
-                                        color: 'inherit',
+                                <Button
+                                    onClick={handleCloseNavMenu}
+                                    sx={{
+                                        my: 2,
+                                        mx: 1,
+                                        color: 'black',
+                                        display: 'block',
                                     }}
                                 >
                                     {page.title}
-                                </Link>
-                            </Button>
+                                </Button>
+                            </Link>
                         ))}
                     </Box>
 
