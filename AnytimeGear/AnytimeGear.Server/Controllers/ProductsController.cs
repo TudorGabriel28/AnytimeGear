@@ -20,16 +20,14 @@ public class ProductsController : Controller
     private readonly ISubcategoryRepository _subCategoryRepository;
     private readonly IMapper _mapper;
     private readonly IRetrieveProductsRequestValidator _retrieveProductsRequestValidator;
-    private readonly IUserProvider _userProvider;
 
-    public ProductsController(IProductRepository productRepository, IMapper mapper, ICategoryRepository categoryRepository, ISubcategoryRepository subcategoryRepository, IRetrieveProductsRequestValidator retrieveProductsRequestValidator, IUserProvider userProvider)
+    public ProductsController(IProductRepository productRepository, IMapper mapper, ICategoryRepository categoryRepository, ISubcategoryRepository subcategoryRepository, IRetrieveProductsRequestValidator retrieveProductsRequestValidator)
     {
         _productRepository = productRepository;
         _categoryRepository = categoryRepository;
         _subCategoryRepository = subcategoryRepository;
         _mapper = mapper;
         _retrieveProductsRequestValidator = retrieveProductsRequestValidator;
-        _userProvider = userProvider;
     }
 
     [HttpGet]
